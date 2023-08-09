@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/common_bg_color"
+    android:orientation="vertical">
+
+    <com.pda.patrol.baseclass.component.TitleBarLayout
+        android:id="@+id/find_rfid_title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="68dp"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/ic_scan"/>
+    <TextView
+        android:id="@+id/find_rfid_down_count_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:textColor="@color/text_color_1"
+        android:textSize="48sp"
+        android:textStyle="bold"
+        tools:text="3"/>
+    <TextView
+        android:id="@+id/find_rfid_tip_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_gravity="center_horizontal"
+        android:textColor="@color/common_blue_color"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:text="正在扫描附近RFID..."/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="20dp"
+        android:textColor="@color/text_color_2"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:text="已扫描的RFID设备"/>
+    <com.pda.patrol.baseclass.component.NoScrollListView
+        android:id="@+id/find_rfid_lv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginBottom="20dp"
+        android:listSelector="@color/transparent"
+        android:divider="@color/transparent"
+        android:dividerHeight="6dp" />
+</LinearLayout>

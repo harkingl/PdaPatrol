@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/transparent"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/dialog_item_address_tv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:lines="1"
+        android:ellipsize="end"
+        android:textColor="@color/text_color_2"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        tools:text="闵行区-春申路-莲花南路交叉口"/>
+    <CheckBox
+        android:id="@+id/dialog_item_cb"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginLeft="20dp"
+        android:button="@null"
+        android:background="@drawable/checkbox_selector"/>
+
+</LinearLayout>

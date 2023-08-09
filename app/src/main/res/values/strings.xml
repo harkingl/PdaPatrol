@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">PdaPatrol</string>
+
+    <string name="frid_count">共%d个</string>
+</resources>
