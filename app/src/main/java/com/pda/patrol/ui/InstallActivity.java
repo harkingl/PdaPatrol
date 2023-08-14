@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -34,6 +33,7 @@ import com.pda.patrol.baseclass.component.TitleBarLayout;
 import com.pda.patrol.entity.AddressInfo;
 import com.pda.patrol.entity.RfidItem;
 import com.pda.patrol.util.FileUtil;
+import com.pda.patrol.util.GlideUtil;
 import com.pda.patrol.util.LogUtil;
 import com.pda.patrol.util.ToastUtil;
 
@@ -121,7 +121,7 @@ public class InstallActivity extends BaseActivity implements View.OnClickListene
 
     private void setView(RfidItem item) {
         if(item != null) {
-            mSelectImgIv.setImageResource(item.img);
+            GlideUtil.loadImage(mSelectImgIv, item.img, null);
             mSelectIdTv.setText("RFID NO : " + item.id);
             mSelectItem = item;
         }

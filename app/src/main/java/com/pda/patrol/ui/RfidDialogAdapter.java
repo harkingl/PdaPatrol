@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.pda.patrol.R;
 import com.pda.patrol.baseclass.BaseListItemAdapter;
 import com.pda.patrol.entity.RfidItem;
+import com.pda.patrol.util.GlideUtil;
 
 import java.util.List;
 
@@ -36,8 +37,7 @@ public class RfidDialogAdapter extends BaseListItemAdapter<RfidItem> {
         }
 
         RfidItem item = items.get(position);
-//        GlideUtil.loadImage(holder.iv, item.img, null);
-        holder.iv.setImageResource(item.img);
+        GlideUtil.loadImage(holder.iv, item.img, null);
         holder.idTv.setText("RFID 编号. " + item.id);
         holder.typeTv.setText("设备类型：" + item.type);
 

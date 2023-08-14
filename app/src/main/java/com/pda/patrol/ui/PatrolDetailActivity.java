@@ -2,7 +2,6 @@ package com.pda.patrol.ui;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,8 +12,7 @@ import com.pda.patrol.baseclass.component.BaseActivity;
 import com.pda.patrol.baseclass.component.ITitleBarLayout;
 import com.pda.patrol.baseclass.component.TitleBarLayout;
 import com.pda.patrol.entity.RfidItem;
-
-import java.util.ArrayList;
+import com.pda.patrol.util.GlideUtil;
 
 public class PatrolDetailActivity extends BaseActivity implements View.OnClickListener {
     private static final String TAG = PatrolDetailActivity.class.getSimpleName();
@@ -49,7 +47,7 @@ public class PatrolDetailActivity extends BaseActivity implements View.OnClickLi
         mItem = (RfidItem) getIntent().getSerializableExtra("rfid_info");
 
         if(mItem != null) {
-            mImgIv.setImageResource(mItem.img);
+            GlideUtil.loadImage(mImgIv, mItem.img, null);
             mIdTv.setText("巡检点" + mItem.id);
             mAddressTv.setText("安装网点：" + mItem.address);
             mTypeTv.setText("巡检点类型：" + mItem.type);

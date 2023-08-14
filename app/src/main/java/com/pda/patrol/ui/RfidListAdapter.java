@@ -37,8 +37,7 @@ public class RfidListAdapter extends BaseListItemAdapter<RfidItem> {
         }
 
         RfidItem item = items.get(position);
-//        GlideUtil.loadImage(holder.iv, item.img, null);
-        holder.iv.setImageResource(item.img);
+        GlideUtil.loadImage(holder.iv, item.img, null);
         holder.idTv.setText("RFID 编号. " + item.id);
         holder.typeTv.setText("设备类型：" + item.type);
 

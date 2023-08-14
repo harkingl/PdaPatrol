@@ -21,6 +21,8 @@ import com.pda.patrol.baseclass.component.NoScrollListView;
 import com.pda.patrol.baseclass.component.TitleBarLayout;
 import com.pda.patrol.entity.RfidItem;
 import com.pda.patrol.hc.OpenTask;
+import com.pda.patrol.request.GetRfidListRequest;
+import com.pda.patrol.server.okhttp.RequestListener;
 import com.pda.patrol.util.LogUtil;
 import com.pda.patrol.util.ToastUtil;
 import com.xlzn.hcpda.uhf.UHFReader;
@@ -44,6 +46,7 @@ public class FindRfidActivity extends BaseActivity implements View.OnClickListen
     private TextView mRescanTv;
     private RfidListAdapter mAdapter;
     private ArrayList<RfidItem> mList;
+    private List<String> epcs;
 
     private int mCount = DEFAULT_DOWN_COUNT;
     @Override
@@ -72,6 +75,7 @@ public class FindRfidActivity extends BaseActivity implements View.OnClickListen
         mDownCountTv.setText(mCount + "");
         mHandler.sendEmptyMessageDelayed(WHAT_DOWN_COUNT, 1000);
 
+        epcs = new ArrayList<>();
         mList = new ArrayList<>();
         mAdapter = new RfidListAdapter(this, mList);
         mRfidLv.setAdapter(mAdapter);
@@ -169,7 +173,8 @@ public class FindRfidActivity extends BaseActivity implements View.OnClickListen
             return;
         }
         String data = readerResult.getData();
-        if(!TextUtils.isEmpty(data)) {
+        LogUtil.d(TAG, "Result data：" + data);
+        if(!TextUtils.isEmpty(data) && !epcs.contains(data)) {
             // 通过handler去请求
             Message msg = mHandler.obtainMessage(WHAT_REQUEST_DATA);
             msg.obj = data;
@@ -178,13 +183,13 @@ public class FindRfidActivity extends BaseActivity implements View.OnClickListen
            mEmptyLayout.setVisibility(View.GONE);
         }
 
-        RfidItem item = new RfidItem();
-        item.img = R.drawable.ic_rfid_img1;
-        item.id = data;
-        item.type = "智能BOX";
-        mList.add(item);
+//        RfidItem item = new RfidItem();
+//        item.img = R.drawable.ic_rfid_img1;
+//        item.id = data;
+//        item.type = "智能BOX";
+//        mList.add(item);
 
-        mAdapter.notifyDataSetChanged();
+//        mAdapter.notifyDataSetChanged();
     }
 
     private static final int WHAT_DOWN_COUNT = 1;
@@ -203,10 +208,31 @@ public class FindRfidActivity extends BaseActivity implements View.OnClickListen
                     }
                    break;
                 case WHAT_REQUEST_DATA:
+                    getData((String)msg.obj);
                     break;
             }
         }
     };
+
+    private void getData(String epc) {
+        if(TextUtils.isEmpty(epc)) {
+            return;
+        }
+        new GetRfidListRequest(this, true, new String[]{epc}, true).schedule(false, new RequestListener<List<RfidItem>>() {
+            @Override
+            public void onSuccess(List<RfidItem> result) {
+                if(result != null) {
+                    mList.addAll(result);
+                    mAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onFailed(Throwable e) {
+                ToastUtil.toastLongMessage(e.getMessage());
+            }
+        });
+    }
 
     private void scanFinish() {
         if(mList == null || mList.size() == 0) {

@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">PdaPatrol</string>
 
+    <string name="repeat_login_tip">您的帐号已在其它终端登录</string>
+    <string name="expired_login_tip">帐号已过期，请重新登录</string>
+
     <string name="frid_count">共%d个</string>
 </resources>

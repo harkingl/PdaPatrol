@@ -12,6 +12,10 @@ import android.widget.TextView;
 
 import com.pda.patrol.R;
 import com.pda.patrol.baseclass.component.BaseActivity;
+import com.pda.patrol.entity.UserInfo;
+import com.pda.patrol.request.LoginRequest;
+import com.pda.patrol.server.okhttp.RequestListener;
+import com.pda.patrol.util.LogUtil;
 import com.pda.patrol.util.ToastUtil;
 
 /***
@@ -44,13 +48,13 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         mEyeIv.setOnClickListener(this);
         mLoginTv.setOnClickListener(this);
 
-//        String phone = UserInfo.getInstance().getPhone();
-//        if(!TextUtils.isEmpty(phone)) {
-//            mAccountEt.setText(phone);
-//        }
+        String phone = UserInfo.getInstance().getPhone();
+        if(!TextUtils.isEmpty(phone)) {
+            mAccountEt.setText(phone);
+        }
 
-        mAccountEt.setText("13444446666");
-        mPwdEt.setText("111111");
+        mAccountEt.setText("sw");
+        mPwdEt.setText("yytt2023");
     }
 
 
@@ -71,11 +75,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         String phone = mAccountEt.getText().toString();
         String pwd = mPwdEt.getText().toString();
         if(TextUtils.isEmpty(phone)) {
-            ToastUtil.toastLongMessage("请输入手机号");
-            return;
-        }
-        if(phone.length() != 11) {
-            ToastUtil.toastLongMessage("手机号格式不正确");
+            ToastUtil.toastLongMessage("请输入用户名");
             return;
         }
         if(TextUtils.isEmpty(pwd)) {
@@ -83,22 +83,21 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             return;
         }
 
-//        new LoginRequest(this, "", phone, pwd, LoginRequest.TYPE_PWD).schedule(true, new RequestListener<UserInfo>() {
-//            @Override
-//            public void onSuccess(UserInfo result) {
-//                ToastUtil.toastLongMessage("登录成功");
-//                loginSuccess(result);
-//            }
-//
-//            @Override
-//            public void onFailed(Throwable e) {
-//                Log.e(TAG, "Login failed：" + e.getMessage());
-//                ToastUtil.toastLongMessage(e.getMessage());
-//
-//            }
-//        });
-        startActivity(new Intent(this, FindRfidActivity.class));
-        finish();
+        new LoginRequest(this, phone, pwd).schedule(true, new RequestListener<UserInfo>() {
+            @Override
+            public void onSuccess(UserInfo result) {
+                ToastUtil.toastLongMessage("登录成功");
+
+                startActivity(new Intent(LoginActivity.this, FindRfidActivity.class));
+                finish();
+            }
+
+            @Override
+            public void onFailed(Throwable e) {
+                LogUtil.e(TAG, "Login failed：" + e.getMessage());
+                ToastUtil.toastLongMessage(e.getMessage());
+            }
+        });
     }
 
     @Override
