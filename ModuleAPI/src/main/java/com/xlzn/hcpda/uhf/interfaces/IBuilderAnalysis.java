@@ -16,6 +16,15 @@ import java.util.List;
  */
 public interface IBuilderAnalysis {
     /**
+     * 设置 target 模式
+     * 0：A 模式
+     * 1：B 模式
+     * 2：A-B 模式
+     * 3：B-A 模式
+     */
+    public byte[] makeSetTargetModel(int model);
+
+    /**
      *  获取发送盘点的指令
      *
      * @return return
@@ -28,13 +37,29 @@ public interface IBuilderAnalysis {
      * @return return
      */
     public byte[] makeStartFastModeInventorySendData(SelectEntity selectEntity,boolean isTID);
+
     /**
-     *  解析接收的发送快速模式连续盘点的指令
+     *  获取发送快速模式连续盘点的指令
      *
      * @return return
      */
-    public UHFReaderResult<Boolean> analysisStartFastModeInventoryReceiveData(DataFrameInfo data,boolean isTID);
+    public byte[] makeStartFastModeInventorySendDataNeedTid(SelectEntity selectEntity,boolean isTID);
+
     /**
+     * 解析接收的发送快速模式连续盘点的指令
+     *
+     * @return return
+     */
+    public UHFReaderResult<Boolean> analysisStartFastModeInventoryReceiveData(DataFrameInfo data, boolean isTID);
+    /**
+     *  解析接收的发送快速模式连续盘点的指令AA48 带TID的
+     *
+     * @return return
+     */
+    public UHFReaderResult<Boolean> analysisStartFastModeInventoryReceiveDataNeedTid(DataFrameInfo data,boolean isTID);
+
+    /**
+     *
      *  快速模式停止盘点
      *
      * @return return

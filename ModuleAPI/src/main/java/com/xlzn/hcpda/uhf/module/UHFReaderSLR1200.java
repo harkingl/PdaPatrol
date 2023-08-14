@@ -1,6 +1,7 @@
 package com.xlzn.hcpda.uhf.module;
 
 import android.os.SystemClock;
+import android.util.Log;
 
 import com.xlzn.hcpda.uhf.analysis.UHFProtocolAnalysisBase;
 import com.xlzn.hcpda.uhf.entity.SelectEntity;
@@ -33,6 +34,12 @@ public class UHFReaderSLR1200 extends UHFReaderSLRBase implements IUHFReader {
     }
 
     @Override
+    public UHFReaderResult<Boolean> getInventoryTidModel() {
+
+        return new UHFReaderResult<Boolean>(UHFReaderResult.ResultCode.CODE_SUCCESS, "", isTid);
+    }
+
+    @Override
     public UHFReaderResult<Boolean> startInventory(SelectEntity selectEntity) {
         uhfProtocolAnalysisSLR.cleanTagInfo();
         if (InventoryMode == InventoryModeForPower.POWER_SAVING_MODE) {
@@ -42,9 +49,22 @@ public class UHFReaderSLR1200 extends UHFReaderSLRBase implements IUHFReader {
         } else {
             //以下是快速模式
             LoggerUtils.d(TAG, "快速模式，是否需要TID " + isTid);
-            byte[] data = builderAnalysisSLR.makeStartFastModeInventorySendData(selectEntity, isTid);
+
+            byte[] data;
+            if (isTid) {
+                data = builderAnalysisSLR.makeStartFastModeInventorySendDataNeedTid(selectEntity, true);
+            } else {
+                data = builderAnalysisSLR.makeStartFastModeInventorySendData(selectEntity, false);
+            }
             UHFProtocolAnalysisBase.DataFrameInfo dataFrameInfo = sendAndReceiveData(data);
-            UHFReaderResult<Boolean> uhfReaderResult = builderAnalysisSLR.analysisStartFastModeInventoryReceiveData(dataFrameInfo, isTid);
+            UHFReaderResult<Boolean> uhfReaderResult = null;
+            if (isTid) {
+
+                uhfReaderResult = builderAnalysisSLR.analysisStartFastModeInventoryReceiveDataNeedTid(dataFrameInfo, isTid);
+            }else {
+                uhfReaderResult = builderAnalysisSLR.analysisStartFastModeInventoryReceiveData(dataFrameInfo, isTid);
+
+            }
             if (uhfReaderResult.getResultCode() != UHFReaderResult.ResultCode.CODE_SUCCESS) {
                 return new UHFReaderResult(UHFReaderResult.ResultCode.CODE_FAILURE, "", false);
             }
@@ -64,11 +84,14 @@ public class UHFReaderSLR1200 extends UHFReaderSLRBase implements IUHFReader {
             //以下上快速模式
             byte[] data = builderAnalysisSLR.makeStopFastModeInventorySendData();
             UHFProtocolAnalysisBase.DataFrameInfo dataFrameInfo = sendAndReceiveData(data);
+            Log.e("TAG", "stopInventory: 发送数据是空 = "  + dataFrameInfo );
             UHFReaderResult<Boolean> uhfReaderResult = builderAnalysisSLR.analysisStopFastModeInventoryReceiveData(dataFrameInfo);
             if (uhfReaderResult.getResultCode() != UHFReaderResult.ResultCode.CODE_SUCCESS) {
+                Log.e("TAG", "stopInventory: 插根"  );
                 return new UHFReaderResult(UHFReaderResult.ResultCode.CODE_FAILURE, "", false);
             }
             stopFastModeInventoryThread();
+            Log.e("TAG", "stopInventory: 插根文档"  );
             return new UHFReaderResult(UHFReaderResult.ResultCode.CODE_SUCCESS, "", true);
         }
 

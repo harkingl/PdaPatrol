@@ -22,10 +22,8 @@ public class FileImport {
     static String xlsFilePath = "/storage/emulated/0/Download/";
 
     public static boolean daochu(String tmpname, List<UHFTagEntity> lists2) {
-
         try {
-
-            String file = xlsFilePath+tmpname;
+            String file = xlsFilePath + tmpname;
 //            if (tmpname.isEmpty())
 //                file = xlsFilePath + "xls"
 //                        + GetTimesyyyymmddhhmmss() + ".xls";
@@ -55,7 +53,7 @@ public class FileImport {
             List<Object> ac = new ArrayList<Object>();
             for (int i = 0; i < lists2.size(); i++) {
                 List<String> al = new ArrayList<String>();
-                al.add( lists2.get(i).getEcpHex());
+                al.add(lists2.get(i).getEcpHex());
                 // al.add(sxl);
                 ac.add(al);
             }

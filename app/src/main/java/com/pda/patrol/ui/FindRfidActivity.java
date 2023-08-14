@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -24,20 +25,27 @@ import com.pda.patrol.util.LogUtil;
 import com.pda.patrol.util.ToastUtil;
 import com.xlzn.hcpda.uhf.UHFReader;
 import com.xlzn.hcpda.uhf.entity.UHFReaderResult;
+import com.xlzn.hcpda.uhf.entity.UHFTagEntity;
+import com.xlzn.hcpda.uhf.interfaces.OnInventoryDataListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class FindRfidActivity extends BaseActivity implements View.OnClickListener {
     private static final String TAG = FindRfidActivity.class.getSimpleName();
+    private static final int DEFAULT_DOWN_COUNT = 10;
 
     private TitleBarLayout mTitlebarLayout;
     private TextView mDownCountTv;
     private TextView mTipTv;
     private NoScrollListView mRfidLv;
+    private View mDataLayout;
+    private View mEmptyLayout;
+    private TextView mRescanTv;
+    private RfidListAdapter mAdapter;
     private ArrayList<RfidItem> mList;
 
-    private int mCount = 3;
+    private int mCount = DEFAULT_DOWN_COUNT;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +61,11 @@ public class FindRfidActivity extends BaseActivity implements View.OnClickListen
         mDownCountTv = findViewById(R.id.find_rfid_down_count_tv);
         mTipTv = findViewById(R.id.find_rfid_tip_tv);
         mRfidLv = findViewById(R.id.find_rfid_lv);
+        mDataLayout = findViewById(R.id.find_rfid_data_ll);
+        mEmptyLayout = findViewById(R.id.find_rfid_empty_ll);
+        mRescanTv = findViewById(R.id.find_rfid_rescan_tv);
+
+        mRescanTv.setOnClickListener(this);
     }
 
     private void initData() {
@@ -60,17 +73,19 @@ public class FindRfidActivity extends BaseActivity implements View.OnClickListen
         mHandler.sendEmptyMessageDelayed(WHAT_DOWN_COUNT, 1000);
 
         mList = new ArrayList<>();
-        RfidItem item = new RfidItem();
-        item.img = R.drawable.ic_rfid_img1;
-        item.id = "YYbox-00001";
-        item.type = "智能BOX";
-        mList.add(item);
-
-        RfidItem item1 = new RfidItem();
-        item1.img = R.drawable.ic_rfid_img2;
-        item1.id = "YYsign-00001";
-        item1.type = "标识牌Sign";
-        mList.add(item1);
+        mAdapter = new RfidListAdapter(this, mList);
+        mRfidLv.setAdapter(mAdapter);
+//        RfidItem item = new RfidItem();
+//        item.img = R.drawable.ic_rfid_img1;
+//        item.id = "YYbox-00001";
+//        item.type = "智能BOX";
+//        mList.add(item);
+//
+//        RfidItem item1 = new RfidItem();
+//        item1.img = R.drawable.ic_rfid_img2;
+//        item1.id = "YYsign-00001";
+//        item1.type = "标识牌Sign";
+//        mList.add(item1);
 
         mRfidLv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -96,7 +111,7 @@ public class FindRfidActivity extends BaseActivity implements View.OnClickListen
     @Override
     protected void onResume() {
         super.onResume();
-        new OpenTask(this).execute();
+        open();
     }
 
     @Override
@@ -105,30 +120,13 @@ public class FindRfidActivity extends BaseActivity implements View.OnClickListen
         close();
     }
 
+    private void open() {
+        new OpenTask(this).execute();
+    }
+
     private void close() {
         UHFReader.getInstance().disConnect();
     }
-
-//    private boolean initdata(){
-//        UHFConfigure.DEBUG = true;
-//
-//        manager =  UHFManager.getIntance(this);
-//        if(manager == null)
-//            return false;
-//
-//        manager.setResultCallback(this);
-//        manager.initUHFDevice();
-//
-//        return true;
-//    }
-//
-//    private boolean uninitdata(){
-//        if(manager == null)
-//            return true;
-//        manager.unInitUHFDevice();
-//        manager = null;
-//        return true;
-//    }
 
     @Override
     protected void onDestroy() {
@@ -140,7 +138,16 @@ public class FindRfidActivity extends BaseActivity implements View.OnClickListen
     public void onClick(View view) {
         if(view == mTitlebarLayout.getLeftGroup()) {
             finish();
+        } else if(view == mRescanTv) {
+            reScan();
         }
+    }
+
+    private void reScan() {
+        mCount = DEFAULT_DOWN_COUNT;
+        open();
+        mDownCountTv.setText(mCount + "");
+        mHandler.sendEmptyMessageDelayed(WHAT_DOWN_COUNT, 1000);
     }
 
     @Override
@@ -155,19 +162,33 @@ public class FindRfidActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void read() {
-//        UHFReaderResult<String> readerResult = UHFReader.getInstance().read("00000000", 1, 2, 6, null);;
-//
-//        if (readerResult.getResultCode() != UHFReaderResult.ResultCode.CODE_SUCCESS) {
-//            ToastUtil.toastLongMessage("读取失败");
-//            return;
-//        }
-//        String data = readerResult.getData();
-//        ToastUtil.toastLongMessage("Result：" + data);
+        UHFReaderResult<String> readerResult = UHFReader.getInstance().read("00000000", 1, 2, 6, null);;
 
-        mRfidLv.setAdapter(new RfidListAdapter(this, mList));
+        if (readerResult.getResultCode() != UHFReaderResult.ResultCode.CODE_SUCCESS) {
+//            ToastUtil.toastLongMessage("读取失败");
+            return;
+        }
+        String data = readerResult.getData();
+        if(!TextUtils.isEmpty(data)) {
+            // 通过handler去请求
+            Message msg = mHandler.obtainMessage(WHAT_REQUEST_DATA);
+            msg.obj = data;
+           mHandler.sendMessage(msg);
+           mDataLayout.setVisibility(View.VISIBLE);
+           mEmptyLayout.setVisibility(View.GONE);
+        }
+
+        RfidItem item = new RfidItem();
+        item.img = R.drawable.ic_rfid_img1;
+        item.id = data;
+        item.type = "智能BOX";
+        mList.add(item);
+
+        mAdapter.notifyDataSetChanged();
     }
 
     private static final int WHAT_DOWN_COUNT = 1;
+    private static final int WHAT_REQUEST_DATA = 2;
     private Handler mHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(@NonNull Message msg) {
@@ -178,18 +199,60 @@ public class FindRfidActivity extends BaseActivity implements View.OnClickListen
                     if(mCount <= 0) {
                         scanFinish();
                     } else {
-                        if(mCount == 1) {
-                            read();
-                        }
                         sendEmptyMessageDelayed(WHAT_DOWN_COUNT, 1000);
                     }
                    break;
+                case WHAT_REQUEST_DATA:
+                    break;
             }
         }
     };
 
     private void scanFinish() {
-        mTipTv.setText("RFID扫描结束");
+        if(mList == null || mList.size() == 0) {
+            mTipTv.setText("未发现附近有RFID");
+            mEmptyLayout.setVisibility(View.VISIBLE);
+            mDataLayout.setVisibility(View.GONE);
+        } else {
+            mTipTv.setText("RFID扫描结束");
+            mEmptyLayout.setVisibility(View.GONE);
+            mDataLayout.setVisibility(View.VISIBLE);
+        }
         close();
+    }
+
+    private void inventory(boolean start) {
+        if (start) {
+
+            UHFReader.getInstance().setOnInventoryDataListener(new OnInventoryDataListener() {
+                @Override
+                public void onInventoryData(List<UHFTagEntity> tagEntityList) {
+//                    Log.e("TAG", "onInventoryData:一次回调--------  " + tagEntityList.size());
+                    if (tagEntityList != null && tagEntityList.size() > 0) {
+                        for (int k = 0; k < tagEntityList.size(); k++) {
+                            if (!TextUtils.isEmpty(tagEntityList.get(k).getEcpHex())) {
+//                                Message message = new Message();
+//                                message.what = 1;
+//                                message.obj = tagEntityList.get(k);
+//                                handler.sendMessage(message);
+//                                Utils.play();
+                                LogUtil.d(TAG, "onInventoryData：" + tagEntityList.get(k).getEcpHex());
+                            }
+                        }
+                    }
+                }
+            });
+
+            UHFReaderResult<Boolean> readerResult = UHFReader.getInstance().startInventory();
+            if (readerResult.getData()) {
+
+            } else {
+                ToastUtil.toastLongMessage("盘点失败");
+            }
+        } else {
+            UHFReaderResult<Boolean> booleanUHFReaderResult = UHFReader.getInstance().stopInventory();
+
+//            handler.removeMessages(2);
+        }
     }
 }

@@ -163,6 +163,7 @@ abstract class UHFReaderSLRBase extends UHFReaderBase implements IUHFReader {
     //发送接收数据
     protected DataFrameInfo sendAndReceiveData(byte[] sData){
         if(!sendData(sData)){
+            Log.e("TAG", "这里为空E: "  );
             return null;
         }
         int timeOut=1000;

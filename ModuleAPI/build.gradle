@@ -8,9 +8,9 @@ android {
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        minSdkVersion 26
-        targetSdkVersion 33
-        versionCode 1
+        minSdkVersion 21
+        targetSdkVersion 31
+        versionCode 3
         versionName "1.0.5"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -41,7 +41,7 @@ android {
 
     buildTypes {
         release {
-//            signingConfig signingConfigs.release
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             android.libraryVariants.all { variant ->
@@ -52,7 +52,7 @@ android {
             buildConfigField("int", "API_VERSION", "${releaseTime()}")
         }
         debug {
-//            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.debug
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             buildConfigField("int", "API_VERSION", "${releaseTime()}")
@@ -98,9 +98,9 @@ static def releaseTime() {
 }
 
 static def versionName() {
-    "\"v1.0.4\""
+    "\"v1.0.5\""
 }
 
 static def versionCodeA() {
-    "v1.0.4"
+    "v1.0.5"
 }

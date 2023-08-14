@@ -15,6 +15,7 @@ import com.xlzn.hcpda.uhf.enums.UHFSession;
 public interface IUHFReader {
     //开始连接
     public UHFReaderResult<Boolean> setInventoryTid(boolean flag);
+    public UHFReaderResult<Boolean> getInventoryTidModel();
     //开始连接
     public UHFReaderResult<Boolean> connect(Context context);
     //断开连接

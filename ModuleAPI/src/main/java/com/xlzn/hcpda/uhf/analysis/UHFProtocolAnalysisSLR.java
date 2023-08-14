@@ -159,6 +159,8 @@ public class UHFProtocolAnalysisSLR extends UHFProtocolAnalysisBase implements I
     //获取非连续盘点的标签数据
     public DataFrameInfo getOtherInfo(int cmd,int timeOut){
         long startTime=SystemClock.uptimeMillis();
+        Log.e("TAG", "getOtherInfo:这里空判断 "  +(SystemClock.uptimeMillis()-startTime<timeOut) );
+        Log.e("TAG", "getOtherInfo:这里空判断 "  +(SystemClock.uptimeMillis()-startTime<timeOut) );
         while (SystemClock.uptimeMillis()-startTime<timeOut){
             if(listCmd!=null && listCmd.size()>0){
                 synchronized (lock) {
@@ -166,6 +168,7 @@ public class UHFProtocolAnalysisSLR extends UHFProtocolAnalysisBase implements I
                         DataFrameInfo dataFrameInfo = listCmd.get(k);
                         if (dataFrameInfo.command == cmd) {
                             listCmd.remove(dataFrameInfo);
+                            Log.e("TAG", "getOtherInfo:这里空 22 "  +dataFrameInfo );
                             return dataFrameInfo;
                         }
                     }
@@ -177,6 +180,7 @@ public class UHFProtocolAnalysisSLR extends UHFProtocolAnalysisBase implements I
                 e.printStackTrace();
             }
         }
+        Log.e("TAG", "getOtherInfo:这里空 "  +(SystemClock.uptimeMillis()-startTime<timeOut) );
         return null;
 
     }
@@ -209,7 +213,7 @@ public class UHFProtocolAnalysisSLR extends UHFProtocolAnalysisBase implements I
                       byte[] taginfo = dataFrameInfo.data;
                       int tagsTotal = taginfo[3] & 0xFF;//标签张数
                       if (tagsTotal > 0) {
-                          LoggerUtils.d(TAG, "增加标签数据.");
+                          LoggerUtils.d(TAG, "增加标签数据.标签个数 = "+ tagsTotal);
                           queueTaginfo.offer(dataFrameInfo);
                       }
                   }

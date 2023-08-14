@@ -7,6 +7,7 @@ import com.pda.patrol.HcPreferences;
 import com.pda.patrol.MainApplication;
 import com.pda.patrol.baseclass.component.BaseActivity;
 import com.pda.patrol.util.LogUtil;
+import com.pda.patrol.util.ToastUtil;
 import com.xlzn.hcpda.uhf.UHFReader;
 import com.xlzn.hcpda.uhf.entity.UHFReaderResult;
 import com.xlzn.hcpda.uhf.enums.InventoryModeForPower;
@@ -36,6 +37,9 @@ public class OpenTask extends AsyncTask<String, Integer, UHFReaderResult> {
                     UHFReader.getInstance().setInventoryModeForPower(InventoryModeForPower.POWER_SAVING_MODE);
                 }
                 UHFReader.getInstance().setPower(HcPreferences.getInstance().getInt(MainApplication.getInstance(), "pda", "power"));
+                ToastUtil.toastLongMessage("连接成功");
+            } else {
+                ToastUtil.toastLongMessage("连接失败");
             }
 //            progressDialog.cancel();
         }

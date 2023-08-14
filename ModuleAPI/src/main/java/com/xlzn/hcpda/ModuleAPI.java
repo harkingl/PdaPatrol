@@ -1,6 +1,6 @@
 package com.xlzn.hcpda;
 
-import com.pda.patrol.BuildConfig;
+import com.hc.ndk.BuildConfig;
 
 public class ModuleAPI {
 
@@ -20,7 +20,7 @@ public class ModuleAPI {
     public native int SerailReceive(int uart_fd,byte[] receiveData,int receiveDataLen);
     public native int CalcCRC(byte[] data,int dataLen,byte[] outCrc);
 
-    public static int getVersionCode = BuildConfig.API_VERSION;
+//    public static int getVersionCode = BuildConfig.API_VERSION;
 
 
 

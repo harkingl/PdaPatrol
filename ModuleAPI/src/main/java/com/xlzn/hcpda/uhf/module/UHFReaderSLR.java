@@ -2,6 +2,7 @@ package com.xlzn.hcpda.uhf.module;
 
 import android.content.Context;
 import android.os.SystemClock;
+import android.util.Log;
 
 import com.hc.so.HcPowerCtrl;
 import com.xlzn.hcpda.DeviceConfigManage;
@@ -38,12 +39,19 @@ public class UHFReaderSLR implements IUHFReader {
     //构建发送的数据
     private IBuilderAnalysis builderAnalysisSLR = new BuilderAnalysisSLR();
     public boolean is5300 = false;
+
     public static UHFReaderSLR getInstance() {
         return uhfReaderSLR;
     }
+
     @Override
     public UHFReaderResult<Boolean> setInventoryTid(boolean flag) {
         return iuhfReader.setInventoryTid(flag);
+    }
+
+    @Override
+    public UHFReaderResult<Boolean> getInventoryTidModel() {
+        return iuhfReader.getInventoryTidModel();
     }
 
     @Override
@@ -60,9 +68,10 @@ public class UHFReaderSLR implements IUHFReader {
 
         hcPowerCtrl.uhfPower(1);
         hcPowerCtrl.uhfCtrl(1);
-        hcPowerCtrl.identityPower(1);
-        hcPowerCtrl.identityCtrl(1);
-        LoggerUtils.d(TAG,"供电-------7");
+//        hcPowerCtrl.identityCtrl(1);
+//        hcPowerCtrl.identityPower(1);
+
+        LoggerUtils.d(TAG, "供电-------8");
         //****************
         UHFReaderResult<UHFVersionInfo> verInfo = null;
         int baudrate = 115200;
@@ -76,27 +85,30 @@ public class UHFReaderSLR implements IUHFReader {
             }
             //*******获取版本号***************
             //发送激活模块的命令
-            SystemClock.sleep(80);
+            SystemClock.sleep(180);
             sendData(DataConverter.hexToBytes("FF00041D0B"));
-            SystemClock.sleep(400);
+            SystemClock.sleep(300);
             //获取版本号
             LoggerUtils.d(TAG, "获取版本号!");
             UHFProtocolAnalysisBase.DataFrameInfo dataFrameInfo = sendAndReceiveData(builderAnalysisSLR.makeGetVersionSendData());
             verInfo = builderAnalysisSLR.analysisVersionData(dataFrameInfo);
-            LoggerUtils.d(TAG, "唤醒模块----"+ verInfo.getResultCode());
+            LoggerUtils.d(TAG, "唤醒模块----" + verInfo.getResultCode());
             SystemClock.sleep(200);
             if (verInfo.getResultCode() == UHFReaderResult.ResultCode.CODE_SUCCESS) {
                 if (verInfo.getData().getHardwareVersion().startsWith("31") || verInfo.getData().getHardwareVersion().startsWith("33")) {
                     builderAnalysisSLR = new BuilderAnalysisSLR_E710();
+//                    builderAnalysisSLR = new BuilderAnalysisSLR();
                     LoggerUtils.d(TAG, "是E710啊----");
                     DeviceConfigManage.module_type = "E710";
                 }
-                hcPowerCtrl.identityPower(0);
-                hcPowerCtrl.identityCtrl(0);
+//                hcPowerCtrl.identityPower(0);
+//                hcPowerCtrl.identityCtrl(0);
                 break;
             } else {
                 LoggerUtils.d(TAG, "获取版本号失败，打开另外一个串口");
-//                uhfConfig.setUhfUart("/dev/ttysWK1");
+//                UHFSerialPort.getInstance().close();
+                SystemClock.sleep(100);
+                uhfConfig.setUhfUart("/dev/ttysWK0");
                 boolean result2 = UHFSerialPort.getInstance().open(uhfConfig.getUhfUart(), uhfProtocolAnalysisSLR, baudrate);
                 LoggerUtils.d(TAG, "打开串口=" + result2 + "  Uart=" + uhfConfig.getUhfUart() + "  baudrate=" + baudrate);
                 if (!result2) {
@@ -108,7 +120,7 @@ public class UHFReaderSLR implements IUHFReader {
                 //发送激活模块的命令
                 SystemClock.sleep(80);
                 sendData(DataConverter.hexToBytes("FF00041D0B"));
-                SystemClock.sleep(300);
+                SystemClock.sleep(400);
                 //获取版本号
                 LoggerUtils.d(TAG, "获取版本号!");
                 UHFProtocolAnalysisBase.DataFrameInfo dataFrameInfo2 = sendAndReceiveData(builderAnalysisSLR.makeGetVersionSendData());
@@ -117,13 +129,14 @@ public class UHFReaderSLR implements IUHFReader {
                 if (verInfo.getResultCode() == UHFReaderResult.ResultCode.CODE_SUCCESS) {
                     if (verInfo.getData().getHardwareVersion().startsWith("31") || verInfo.getData().getHardwareVersion().startsWith("33")) {
                         builderAnalysisSLR = new BuilderAnalysisSLR_E710();
+//                        builderAnalysisSLR = new BuilderAnalysisSLR();
                         LoggerUtils.d(TAG, "是E710啊----");
                         DeviceConfigManage.module_type = "E710";
                     }
                     break;
                 } else {
-                    hcPowerCtrl.uhfPower(0);
-                    hcPowerCtrl.uhfCtrl(0);
+//                    hcPowerCtrl.uhfPower(0);
+//                    hcPowerCtrl.uhfCtrl(0);
                 }
             }
             UHFSerialPort.getInstance().close();
@@ -136,15 +149,15 @@ public class UHFReaderSLR implements IUHFReader {
             UHFVersionInfo uhfVersionInfo = verInfo.getData();
             String hver = uhfVersionInfo.getHardwareVersion();
             String firmwareVersion = uhfVersionInfo.getFirmwareVersion();
-                        LoggerUtils.d(TAG, "固件版本:" + firmwareVersion +"  硬件版本="+hver);
-            if ( hver.startsWith("A1")) {
+            LoggerUtils.d(TAG, "固件版本:" + firmwareVersion + "  硬件版本=" + hver);
+            if (hver.startsWith("A1")) {
                 //SLR1200 固件版本:20200703  硬件版本=A1000201
-               LoggerUtils.d(TAG,"R2000 协议构建");
+                LoggerUtils.d(TAG, "R2000 协议构建");
                 DeviceConfigManage.module_type = "R2000";
                 is5300 = false;
                 iuhfReader = new UHFReaderSLR1200(uhfProtocolAnalysisSLR, builderAnalysisSLR);
-            } else if (hver.startsWith("31")||hver.startsWith("33")) {
-                LoggerUtils.d(TAG,"E710 协议构建");
+            } else if (hver.startsWith("31") || hver.startsWith("33")) {
+                LoggerUtils.d(TAG, "E710 协议构建");
                 //其他模块
                 //e710 硬件版本:31000000\固件版本:20220531
                 // iuhfReader=new ...
@@ -155,8 +168,8 @@ public class UHFReaderSLR implements IUHFReader {
                 }
                 is5300 = false;
                 iuhfReader = new UHFReaderSLR1200(uhfProtocolAnalysisSLR, builderAnalysisSLR);
-            } else if (hver.startsWith("A6")||hver.startsWith("A3")) {
-                LoggerUtils.d(TAG,"5300 协议构建");
+            } else if (hver.startsWith("A6") || hver.startsWith("A3")) {
+                LoggerUtils.d(TAG, "5300 协议构建");
                 if (hver.startsWith("A6")) {
                     DeviceConfigManage.module_type = "5100";
                 } else {
@@ -168,7 +181,7 @@ public class UHFReaderSLR implements IUHFReader {
 
             }
         }
-        if (iuhfReader==null) {
+        if (iuhfReader == null) {
             return new UHFReaderResult(UHFReaderResult.ResultCode.CODE_FAILURE);
         }
         ((UHFReaderBase) iuhfReader).setConnectState(ConnectState.CONNECTED);
@@ -183,8 +196,9 @@ public class UHFReaderSLR implements IUHFReader {
         //模块下电
         hcPowerCtrl.uhfPower(0);
         hcPowerCtrl.uhfCtrl(0);
-//        hcPowerCtrl.identityPower(0);
-        LoggerUtils.d("CHLOG","----------------------模块下电");
+        hcPowerCtrl.identityCtrl(0);
+        hcPowerCtrl.identityPower(0);
+        LoggerUtils.d("CHLOG", "----------------------模块下电");
         UHFSerialPort.getInstance().close();
         if (iuhfReader != null) {
             ((UHFReaderBase) iuhfReader).setConnectState(ConnectState.DISCONNECT);
@@ -200,8 +214,10 @@ public class UHFReaderSLR implements IUHFReader {
     @Override
     public UHFReaderResult<Boolean> stopInventory() {
         if (iuhfReader == null) {
+            Log.e("TAG", "stopInventory在这里返回了: "  );
             return new UHFReaderResult(UHFReaderResult.ResultCode.CODE_FAILURE, "");
         }
+
         return iuhfReader.stopInventory();
     }
 

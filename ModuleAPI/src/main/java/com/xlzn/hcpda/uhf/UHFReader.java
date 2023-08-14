@@ -18,6 +18,7 @@ import com.xlzn.hcpda.uhf.enums.UHFSession;
 import com.xlzn.hcpda.uhf.interfaces.IUHFReader;
 import com.xlzn.hcpda.uhf.interfaces.OnInventoryDataListener;
 import com.xlzn.hcpda.uhf.module.UHFReaderSLR;
+import com.xlzn.hcpda.utils.LoggerUtils;
 
 public class UHFReader {
 
@@ -31,6 +32,10 @@ public class UHFReader {
     public static UHFReader getInstance(){
             return uhfReader;
     }
+
+
+
+
 
     /**
      *
@@ -52,6 +57,9 @@ public class UHFReader {
         return new UHFReaderResult(CODE_FAILURE);
     }
 
+    public synchronized UHFReaderResult<Boolean> getInventoryTidModel() {
+        return reader.getInventoryTidModel();
+    }
     /**
      *
      * Disconnect the UHF reader
@@ -103,6 +111,7 @@ public class UHFReader {
      */
     public synchronized UHFReaderResult<Boolean> stopInventory() {
         if(getConnectState() != ConnectState.CONNECTED){
+
             return new UHFReaderResult(CODE_READER_NOT_CONNECTED, UHFReaderResult.ResultMessage.READER_NOT_CONNECTED,false);
         }
         return  reader.stopInventory();
@@ -156,6 +165,7 @@ public class UHFReader {
      * @return UHFReaderResult
      */
     public UHFReaderResult<Boolean> setInventoryTid(boolean flag){
+        LoggerUtils.d("TAG","是否设置TID = "+ flag);
         if(getConnectState() != ConnectState.CONNECTED){
             return new UHFReaderResult(CODE_READER_NOT_CONNECTED, UHFReaderResult.ResultMessage.READER_NOT_CONNECTED,false);
         }
