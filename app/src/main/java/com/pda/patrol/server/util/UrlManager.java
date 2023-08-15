@@ -18,4 +18,19 @@ public class UrlManager {
      * 获取单条记录详情
      */
     public static final String GET_RFID_INFO = "/api/v1/tbrfid";
+
+    /**
+     * 获取安装网点列表
+     */
+    public static final String GET_ADDRESS_LIST = "/api/v1/tbaddress";
+
+    /**
+     * 安装巡检点
+     */
+    public static final String INSTALL_INSPECTION = "/api/v1/tbinspection";
+
+    /**
+     * 获取任务列表
+     */
+    public static final String GET_TASK_LIST = "/api/v1/tbtask";
 }

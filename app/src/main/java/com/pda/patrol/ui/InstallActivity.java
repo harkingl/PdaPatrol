@@ -32,6 +32,9 @@ import com.pda.patrol.baseclass.component.NoScrollListView;
 import com.pda.patrol.baseclass.component.TitleBarLayout;
 import com.pda.patrol.entity.AddressInfo;
 import com.pda.patrol.entity.RfidItem;
+import com.pda.patrol.request.GetAddressListRequest;
+import com.pda.patrol.request.InstallInspectionRequest;
+import com.pda.patrol.server.okhttp.RequestListener;
 import com.pda.patrol.util.FileUtil;
 import com.pda.patrol.util.GlideUtil;
 import com.pda.patrol.util.LogUtil;
@@ -59,7 +62,7 @@ public class InstallActivity extends BaseActivity implements View.OnClickListene
     private RfidItem mSelectItem;
     private ArrayList<RfidItem> mRfidList;
     private AddressInfo mSelectAddressInfo;
-    private ArrayList<AddressInfo> mAddressList;
+    private List<AddressInfo> mAddressList;
     private ImageSelectAdapter mImgAdapter;
     private List<String> mImgList;
 
@@ -108,15 +111,33 @@ public class InstallActivity extends BaseActivity implements View.OnClickListene
             }
         });
 
-        mAddressList = new ArrayList<>();
-        AddressInfo info1 = new AddressInfo();
-        info1.address = "闵行区-春申路-莲花南路交叉口";
-        mAddressList.add(info1);
-        AddressInfo info2 = new AddressInfo();
-        info2.address = "闵行区-春申路-虹梅南路交叉口";
-        mAddressList.add(info2);
+//        mAddressList = new ArrayList<>();
+//        AddressInfo info1 = new AddressInfo();
+//        info1.address = "闵行区-春申路-莲花南路交叉口";
+//        mAddressList.add(info1);
+//        AddressInfo info2 = new AddressInfo();
+//        info2.address = "闵行区-春申路-虹梅南路交叉口";
+//        mAddressList.add(info2);
+//
+//        setAddressInfo(mAddressList.get(0));
+        getAddressData();
+    }
 
-        setAddressInfo(mAddressList.get(0));
+    private void getAddressData() {
+        new GetAddressListRequest(this).schedule(false, new RequestListener<List<AddressInfo>>() {
+            @Override
+            public void onSuccess(List<AddressInfo> result) {
+                if(result != null && result.size() > 0) {
+                    setAddressInfo(result.get(0));
+                    mAddressList = result;
+                }
+            }
+
+            @Override
+            public void onFailed(Throwable e) {
+                ToastUtil.toastLongMessage(e.getMessage());
+            }
+        });
     }
 
     private void setView(RfidItem item) {
@@ -163,24 +184,46 @@ public class InstallActivity extends BaseActivity implements View.OnClickListene
         if(view == mTitlebarLayout.getLeftGroup()) {
             finish();
         } else if(view == mSelectItemLayout) {
-            selectFridDialog(this);
+            if(mRfidList != null && mRfidList.size() > 0) {
+                selectFridDialog(this);
+            }
         } else if(view == mSelectAddressLayout) {
-            selectAddressDialog(this);
+            if(mAddressList != null && mAddressList.size() > 0) {
+                selectAddressDialog(this);
+            } else {
+                getAddressData();
+            }
         } else if(view == mCommitTv) {
             doCommit();
         }
     }
 
     private void doCommit() {
-        String address = mSelectAddressTv.getText().toString();
-        if(TextUtils.isEmpty(address)) {
+        if(mSelectAddressInfo == null) {
             ToastUtil.toastLongMessage("请选择安装网点");
             return;
         }
-        mSelectItem.address = address;
-        Intent i = new Intent(this, PatrolDetailActivity.class);
-        i.putExtra("rfid_info", mSelectItem);
-        startActivity(i);
+        String remark = mNoteEt.getText().toString();
+//        mSelectItem.address = address;
+//        Intent i = new Intent(this, PatrolDetailActivity.class);
+//        i.putExtra("rfid_info", mSelectItem);
+//        startActivity(i);
+        new InstallInspectionRequest(this, mSelectAddressInfo.address, mSelectAddressInfo.id, null, new String[]{mSelectItem.id}, remark).schedule(true, new RequestListener<Boolean>() {
+            @Override
+            public void onSuccess(Boolean result) {
+                ToastUtil.toastLongMessage("安装成功");
+
+                Intent i = new Intent(InstallActivity.this, PatrolDetailActivity.class);
+                i.putExtra("rfid_info", mSelectItem);
+                startActivity(i);
+                finish();
+            }
+
+            @Override
+            public void onFailed(Throwable e) {
+                ToastUtil.toastLongMessage(e.getMessage());
+            }
+        });
     }
 
     @Override

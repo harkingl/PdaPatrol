@@ -1,6 +1,9 @@
 package com.pda.patrol.request;
 
 import android.content.Context;
+import android.text.TextUtils;
+
+import androidx.core.content.res.TypedArrayUtils;
 
 import com.pda.patrol.entity.RfidItem;
 import com.pda.patrol.entity.UserInfo;
@@ -12,6 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class GetRfidListRequest extends BaseRequest<List<RfidItem>> {
@@ -35,11 +39,9 @@ public class GetRfidListRequest extends BaseRequest<List<RfidItem>> {
         JSONObject obj = new JSONObject();
         obj.put("scan", scan);
         if(epcs != null) {
-            JSONArray array = new JSONArray();
-            for(String epc : epcs) {
-                array.put(epc);
-            }
-            obj.put("epcs", array);
+//            obj.put("epcs[]", TextUtils.join(",", epcs));
+//            obj.put("epcs[]", Arrays.toString(epcs));
+            obj.put("epc[]", epcs[0]);
         }
         obj.put("ad", ad);
 

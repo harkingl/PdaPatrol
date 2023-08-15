@@ -52,16 +52,26 @@
             android:textSize="14sp"
             android:textStyle="bold"
             android:text="已扫描的RFID设备"/>
-        <com.pda.patrol.baseclass.component.NoScrollListView
-            android:id="@+id/find_rfid_lv"
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:layout_marginHorizontal="20dp"
+            android:layout_marginRight="20dp"
             android:layout_marginBottom="20dp"
-            android:listSelector="@color/transparent"
-            android:divider="@color/transparent"
-            android:dividerHeight="6dp" />
+            android:fillViewport="true">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <com.pda.patrol.baseclass.component.NoScrollListView
+                    android:id="@+id/find_rfid_lv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:listSelector="@color/transparent"
+                    android:divider="@color/transparent"
+                    android:dividerHeight="6dp"/>
+            </LinearLayout>
+        </ScrollView>
     </LinearLayout>
     <LinearLayout
         android:id="@+id/find_rfid_empty_ll"

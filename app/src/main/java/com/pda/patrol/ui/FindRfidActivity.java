@@ -151,6 +151,9 @@ public class FindRfidActivity extends BaseActivity implements View.OnClickListen
         mCount = DEFAULT_DOWN_COUNT;
         open();
         mDownCountTv.setText(mCount + "");
+        mTipTv.setText("正在扫描附近RFID...");
+        mDataLayout.setVisibility(View.VISIBLE);
+        mEmptyLayout.setVisibility(View.GONE);
         mHandler.sendEmptyMessageDelayed(WHAT_DOWN_COUNT, 1000);
     }
 
@@ -222,7 +225,8 @@ public class FindRfidActivity extends BaseActivity implements View.OnClickListen
             @Override
             public void onSuccess(List<RfidItem> result) {
                 if(result != null) {
-                    mList.addAll(result);
+//                    mList.addAll(result);
+                    mList.add(result.get(0));
                     mAdapter.notifyDataSetChanged();
                 }
             }

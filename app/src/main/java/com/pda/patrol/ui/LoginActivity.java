@@ -12,11 +12,15 @@ import android.widget.TextView;
 
 import com.pda.patrol.R;
 import com.pda.patrol.baseclass.component.BaseActivity;
+import com.pda.patrol.entity.TaskInfo;
 import com.pda.patrol.entity.UserInfo;
+import com.pda.patrol.request.GetTaskListRequest;
 import com.pda.patrol.request.LoginRequest;
 import com.pda.patrol.server.okhttp.RequestListener;
 import com.pda.patrol.util.LogUtil;
 import com.pda.patrol.util.ToastUtil;
+
+import java.util.List;
 
 /***
  * 登陆页面
@@ -55,8 +59,23 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
         mAccountEt.setText("sw");
         mPwdEt.setText("yytt2023");
+
+//        getTaskList();
     }
 
+    private void getTaskList() {
+        new GetTaskListRequest(this, -1, "").schedule(false, new RequestListener<List<TaskInfo>>() {
+            @Override
+            public void onSuccess(List<TaskInfo> result) {
+
+            }
+
+            @Override
+            public void onFailed(Throwable e) {
+                ToastUtil.toastLongMessage(e.getMessage());
+            }
+        });
+    }
 
     private void setEyeVisible() {
         if (mShowEye) {
@@ -105,7 +124,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         if(view == mEyeIv) {
             setEyeVisible();
         } else if(view == mLoginTv) {
-            doLogin();
+//            doLogin();
+            startActivity(new Intent(this, PatrolDetailActivity.class));
         }
     }
 }
