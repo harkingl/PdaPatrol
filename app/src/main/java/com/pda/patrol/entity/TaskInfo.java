@@ -18,17 +18,18 @@ public class TaskInfo implements Serializable {
     // "2023-08-11T11:03:27+08:00"
     public String lut;
     public String name;
-    // 任务状态(-1:全部,0:待执行,1:已完成,2:已逾期)
-    public int state;
     public String inspectionId;
+    public String dealTime;
     public String endTime;
     public String[] fileIds;
     public String[] rfidIds;
+    // 巡检状态(1:正常, 2:异常)
     public int isNormal;
     public String abnormalType;
     public String abnormalResult;
     public String abnormalInfo;
     public String stateName;
+    // 任务状态(-1:全部,0:待执行,1:已完成,2:已逾期)
     public int taskState;
     public String taskStateName;
     public String inspectionName;
@@ -36,7 +37,7 @@ public class TaskInfo implements Serializable {
     public double lng;
     public double lat;
     public String nickname;
-    List<String> fileList;
+    public List<String> fileList;
     public List<RfidItem> rfidList;
 
 
@@ -44,7 +45,16 @@ public class TaskInfo implements Serializable {
         id = obj.optString("id");
         crt = obj.optString("crt");
         lut = obj.optString("lut");
+        inspectionId = obj.optString("inspectionId");
+        dealTime = obj.optString("dealTime");
         endTime = obj.optString("endTime");
+        isNormal = obj.optInt("isNormal");
+        abnormalType = obj.optString("abnormalType");
+        abnormalResult = obj.optString("abnormalResult");
+        abnormalInfo = obj.optString("abnormalInfo");
+        stateName = obj.optString("stateName");
+        taskState = obj.optInt("taskState");
+        taskStateName = obj.optString("taskStateName");
         name = obj.optString("name");
         address = obj.optString("address");
         lng = obj.optDouble("lng");

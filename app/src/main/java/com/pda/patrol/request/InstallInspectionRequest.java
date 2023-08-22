@@ -6,22 +6,23 @@ import android.text.TextUtils;
 import com.pda.patrol.server.okhttp.BaseRequest;
 import com.pda.patrol.server.util.UrlManager;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Arrays;
 
-public class InstallInspectionRequest extends BaseRequest<Boolean> {
+public class InstallInspectionRequest extends BaseRequest<String> {
     private String name;
-    private String id;
+    private String addressId;
     private String[] fileIds;
     private String[] rfidIds;
     private String remark;
-    public InstallInspectionRequest(Context context, String name, String id, String[] fileIds, String[] rfidIds, String remark) {
+    public InstallInspectionRequest(Context context, String name, String addressId, String[] fileIds, String[] rfidIds, String remark) {
         super(context);
 
         this.name = name;
-        this.id = id;
+        this.addressId = addressId;
         this.fileIds = fileIds;
         this.rfidIds = rfidIds;
         this.remark = remark;
@@ -36,11 +37,19 @@ public class InstallInspectionRequest extends BaseRequest<Boolean> {
     protected String body()  throws JSONException {
         JSONObject obj = new JSONObject();
         obj.put("name", name);
-        obj.put("id", id);
+        obj.put("addressId", addressId);
         if(fileIds != null) {
-            obj.put("fileIds", Arrays.toString(fileIds));
+            JSONArray fileIdArray = new JSONArray();
+            for(String fileId : fileIds) {
+                fileIdArray.put(fileId);
+            }
+            obj.put("fileIds", fileIdArray);
         }
-        obj.put("rfidIds", Arrays.toString(rfidIds));
+        JSONArray rfidIdArray = new JSONArray();
+        for(String rfidId : rfidIds) {
+            rfidIdArray.put(rfidId);
+        }
+        obj.put("rfidIds", rfidIdArray);
         if(!TextUtils.isEmpty(remark)) {
             obj.put("remark", remark);
         }
@@ -49,8 +58,11 @@ public class InstallInspectionRequest extends BaseRequest<Boolean> {
     }
 
     @Override
-    protected Boolean result(JSONObject json) throws Exception {
-
-        return true;
+    protected String result(JSONObject json) throws Exception {
+        JSONObject data = json.optJSONObject("data");
+        if(data != null) {
+            return data.optString("id");
+        }
+        return "";
     }
 }

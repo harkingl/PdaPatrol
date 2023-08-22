@@ -39,7 +39,7 @@ public class LoginRequest extends BaseRequest<UserInfo> {
         if(data != null) {
             info.setPhone(data.optString("mobile"));
             info.setUserId(data.optString("uid"));
-            info.setToken(data.optString("ojut"));
+            info.setToken(data.optString("token"));
             info.setName(data.optString("nickname"));
             info.storeUserInfo();
         }

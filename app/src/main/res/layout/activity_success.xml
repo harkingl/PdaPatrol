@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/common_bg_color"
+    android:orientation="vertical">
+
+    <com.pda.patrol.baseclass.component.TitleBarLayout
+        android:id="@+id/success_title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="68dp"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/ic_success"/>
+    <TextView
+        android:id="@+id/success_title_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="8dp"
+        android:layout_gravity="center_horizontal"
+        android:textColor="@color/text_color_1"
+        android:textSize="24sp"
+        android:text="提交成功！"/>
+    <TextView
+        android:id="@+id/success_tip_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_gravity="center_horizontal"
+        android:textColor="@color/text_color_1"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        tools:text="你已完成 巡检点8820230001 的安装。"/>
+
+    <TextView
+        android:id="@+id/success_continue_tv"
+        android:layout_width="173dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="53dp"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:background="@drawable/btn_scan_bg_shape"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        tools:text="继续安装"/>
+
+    <TextView
+        android:id="@+id/success_home_tv"
+        android:layout_width="173dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:background="@drawable/btn_border_bg_gray_shape"
+        android:textColor="@color/text_color_1"
+        android:textSize="16sp"
+        android:text="返回首页"/>
+</LinearLayout>

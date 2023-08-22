@@ -74,11 +74,11 @@ public abstract class BaseRequest<R> {
 
     protected Request buildPost() throws Exception {
         RequestBody body = null;
-        if(url().contains(UrlManager.USER_LOGIN)) {
-            body = buildFormBody();
-        } else {
+//        if(url().contains(UrlManager.USER_LOGIN)) {
+//            body = buildFormBody();
+//        } else {
             body = buildBody();
-        }
+//        }
 
         return new Request.Builder()
                 .url(UrlManager.formatUrl(url()))
@@ -128,7 +128,7 @@ public abstract class BaseRequest<R> {
         Headers.Builder b = new Headers.Builder();
         String token = UserInfo.getInstance().getToken();
         if(!TextUtils.isEmpty(UserInfo.getInstance().getToken())) {
-            b.add("token", token);
+            b.add("Authorization", token);
         }
 
         return b.build();

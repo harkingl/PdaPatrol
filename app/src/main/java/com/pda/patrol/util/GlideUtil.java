@@ -82,4 +82,23 @@ public class GlideUtil {
                 .listener(listener)
                 .into(imageView);
     }
+
+    public static void loadCornerImage(ImageView imageView, String filePath, int itemSize, RequestListener listener, int radius) {
+        CornerTransform transform = null;
+        if (radius > 0) {
+            transform = new CornerTransform(MainApplication.getInstance(), ScreenUtil.dip2px(radius));
+        }
+
+        RequestOptions options = new RequestOptions()
+                .centerCrop();
+        if (transform != null) {
+            options = options.transform(transform);
+        }
+        Glide.with(MainApplication.getInstance())
+                .load(filePath)
+                .override(itemSize, itemSize)
+                .apply(options)
+                .listener(listener)
+                .into(imageView);
+    }
 }

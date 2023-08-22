@@ -12,12 +12,12 @@ public class UrlManager {
     /**
      * 登录
      */
-    public static final String USER_LOGIN = "/api/v1/login";
+    public static final String USER_LOGIN = "/api/v1/openApi/login";
 
     /**
-     * 获取单条记录详情
+     * 扫码获取rfid信息详情
      */
-    public static final String GET_RFID_INFO = "/api/v1/tbrfid";
+    public static final String GET_RFID_INFO = "/api/v1/openApi/tbrfid";
 
     /**
      * 获取安装网点列表
@@ -33,4 +33,19 @@ public class UrlManager {
      * 获取任务列表
      */
     public static final String GET_TASK_LIST = "/api/v1/tbtask";
+
+    /**
+     * 上传文件
+     */
+    public static final String UPLOAD_FILE = "/api/v1/tbfile/upload/single";
+
+    /**
+     * 巡检异常类型
+     */
+    public static final String GET_ERROR_TYPE_LIST = "/api/v1/tbdictionary/codes";
+
+    /**
+     * 完成任务
+     */
+    public static final String TASK_DONE = "/api/v1/tbtask/done/";
 }

@@ -7,8 +7,11 @@
     <color name="text_color_1">#313333</color>
     <color name="text_color_2">#666666</color>
     <color name="text_color_3">#8F9090</color>
+    <color name="text_color_4">#999999</color>
     <color name="hint_text_color">#CACACA</color>
     <color name="common_blue_color">#3783F7</color>
     <color name="common_line_color">#F5F5F5</color>
     <color name="common_bg_color">#FFFAFAFA</color>
+    <color name="common_green_color">#00B15F</color>
+    <color name="common_red_color">#FF8E7E</color>
 </resources>

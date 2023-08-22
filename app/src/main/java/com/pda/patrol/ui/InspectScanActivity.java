@@ -8,7 +8,6 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,40 +18,45 @@ import com.pda.patrol.baseclass.component.BaseActivity;
 import com.pda.patrol.baseclass.component.ITitleBarLayout;
 import com.pda.patrol.baseclass.component.NoScrollListView;
 import com.pda.patrol.baseclass.component.TitleBarLayout;
+import com.pda.patrol.entity.InspectionDetail;
 import com.pda.patrol.entity.RfidItem;
 import com.pda.patrol.hc.OpenTask;
-import com.pda.patrol.request.GetRfidListRequest;
+import com.pda.patrol.request.GetInspectionDetailRequest;
 import com.pda.patrol.server.okhttp.RequestListener;
 import com.pda.patrol.util.LogUtil;
 import com.pda.patrol.util.ToastUtil;
 import com.xlzn.hcpda.uhf.UHFReader;
 import com.xlzn.hcpda.uhf.entity.UHFReaderResult;
-import com.xlzn.hcpda.uhf.entity.UHFTagEntity;
-import com.xlzn.hcpda.uhf.interfaces.OnInventoryDataListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class FindRfidActivity extends BaseActivity implements View.OnClickListener {
-    private static final String TAG = FindRfidActivity.class.getSimpleName();
-    private static final int DEFAULT_DOWN_COUNT = 10;
+public class InspectScanActivity extends BaseActivity implements View.OnClickListener {
+    private static final String TAG = InspectScanActivity.class.getSimpleName();
+    private static final int DEFAULT_DOWN_COUNT = 60;
 
     private TitleBarLayout mTitlebarLayout;
     private TextView mDownCountTv;
     private TextView mTipTv;
+    private View mCountLayout;
+    private TextView mCountTv;
     private NoScrollListView mRfidLv;
     private View mDataLayout;
     private View mEmptyLayout;
     private TextView mRescanTv;
-    private RfidListAdapter mAdapter;
+    private View mNextLayout;
+    private TextView mNextTv;
+    private InspectRfidListAdapter mAdapter;
     private ArrayList<RfidItem> mList;
     private List<String> epcs;
+    private String mId;
+    private InspectionDetail mDetail;
 
     private int mCount = DEFAULT_DOWN_COUNT;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_find_rfid);
+        setContentView(R.layout.activity_inspect_scan);
 
         initView();
         configTitleBar();
@@ -60,56 +64,75 @@ public class FindRfidActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void initView() {
-        mTitlebarLayout = findViewById(R.id.find_rfid_title_bar);
-        mDownCountTv = findViewById(R.id.find_rfid_down_count_tv);
-        mTipTv = findViewById(R.id.find_rfid_tip_tv);
-        mRfidLv = findViewById(R.id.find_rfid_lv);
-        mDataLayout = findViewById(R.id.find_rfid_data_ll);
-        mEmptyLayout = findViewById(R.id.find_rfid_empty_ll);
-        mRescanTv = findViewById(R.id.find_rfid_rescan_tv);
+        mTitlebarLayout = findViewById(R.id.inspect_scan_title_bar);
+        mDownCountTv = findViewById(R.id.inspect_scan_down_count_tv);
+        mTipTv = findViewById(R.id.inspect_scan_tip_tv);
+        mCountLayout = findViewById(R.id.inspect_scan_count_ll);
+        mCountTv = findViewById(R.id.inspect_scan_count_tv);
+        mRfidLv = findViewById(R.id.inspect_scan_rfid_lv);
+        mDataLayout = findViewById(R.id.inspect_scan_data_ll);
+        mEmptyLayout = findViewById(R.id.inspect_scan_empty_ll);
+        mRescanTv = findViewById(R.id.inspect_scan_rescan_tv);
+        mNextLayout = findViewById(R.id.inspect_scan_next_ll);
+        mNextTv = findViewById(R.id.inspect_scan_next_tv);
 
         mRescanTv.setOnClickListener(this);
+        mNextTv.setOnClickListener(this);
     }
 
     private void initData() {
+        mId = getIntent().getStringExtra("inspect_id");
         mDownCountTv.setText(mCount + "");
-        mHandler.sendEmptyMessageDelayed(WHAT_DOWN_COUNT, 1000);
 
         epcs = new ArrayList<>();
         mList = new ArrayList<>();
-        mAdapter = new RfidListAdapter(this, mList);
+        mAdapter = new InspectRfidListAdapter(this, mList);
         mRfidLv.setAdapter(mAdapter);
-//        RfidItem item = new RfidItem();
-//        item.img = R.drawable.ic_rfid_img1;
-//        item.id = "YYbox-00001";
-//        item.type = "智能BOX";
-//        mList.add(item);
-//
-//        RfidItem item1 = new RfidItem();
-//        item1.img = R.drawable.ic_rfid_img2;
-//        item1.id = "YYsign-00001";
-//        item1.type = "标识牌Sign";
-//        mList.add(item1);
 
-        mRfidLv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//        mRfidLv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                onItemSelect(i);
+//            }
+//        });
+//        mId = "1688841125726523392";
+        new GetInspectionDetailRequest(this, mId).schedule(false, new RequestListener<InspectionDetail>() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                onItemSelect(i);
+            public void onSuccess(InspectionDetail result) {
+                setView(result);
+                mHandler.sendEmptyMessageDelayed(WHAT_DOWN_COUNT, 1000);
+            }
+
+            @Override
+            public void onFailed(Throwable e) {
+                ToastUtil.toastLongMessage(e.getMessage());
             }
         });
     }
 
     private void configTitleBar() {
         mTitlebarLayout.getRightIcon().setVisibility(View.GONE);
-        mTitlebarLayout.setTitle("查找RFID", ITitleBarLayout.Position.LEFT);
+        mTitlebarLayout.setTitle("执行巡检", ITitleBarLayout.Position.LEFT);
         mTitlebarLayout.setOnLeftClickListener(this);
     }
 
-    private void onItemSelect(int position) {
-        Intent i = new Intent(this, InstallActivity.class);
-        i.putExtra("select_item", mList.get(position));
-        i.putExtra("frid_list", mList);
-        startActivity(i);
+    private void setView(InspectionDetail detail) {
+        if(detail == null) {
+            return;
+        }
+        if(detail.rfidList != null) {
+            String[] epcs = new String[]{"E28011700000020E2511603A",
+                    "E280689400005015AF781C6F",
+                    "E28068940000401B3DA3E4A5",
+                    "E28068940000401B3DA3E4A6"};
+            for(int i = 0; i < detail.rfidList.size(); i++) {
+                detail.rfidList.get(i).epc = epcs[i];
+            }
+            mCountTv.setText("共" + detail.rfidList.size() + "个设备");
+            mList.addAll(detail.rfidList);
+            mAdapter.notifyDataSetChanged();
+        }
+        mDetail = detail;
     }
 
     @Override
@@ -122,17 +145,6 @@ public class FindRfidActivity extends BaseActivity implements View.OnClickListen
     protected void onPause() {
         super.onPause();
         close();
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-
-        reScan();
-        if(mList != null) {
-            mList.clear();
-            mAdapter.notifyDataSetChanged();
-        }
     }
 
     private void open() {
@@ -155,6 +167,8 @@ public class FindRfidActivity extends BaseActivity implements View.OnClickListen
             finish();
         } else if(view == mRescanTv) {
             reScan();
+        } else if(view == mNextTv) {
+            doNext();
         }
     }
 
@@ -162,7 +176,7 @@ public class FindRfidActivity extends BaseActivity implements View.OnClickListen
         mCount = DEFAULT_DOWN_COUNT;
         open();
         mDownCountTv.setText(mCount + "");
-        mTipTv.setText("正在扫描附近RFID...");
+        mTipTv.setText("正在扫描附近的巡检点...");
         mDataLayout.setVisibility(View.VISIBLE);
         mEmptyLayout.setVisibility(View.GONE);
         mHandler.sendEmptyMessageDelayed(WHAT_DOWN_COUNT, 1000);
@@ -189,12 +203,11 @@ public class FindRfidActivity extends BaseActivity implements View.OnClickListen
         String data = readerResult.getData();
         LogUtil.d(TAG, "Result data：" + data);
         if(!TextUtils.isEmpty(data) && !epcs.contains(data)) {
+            epcs.add(data);
             // 通过handler去请求
             Message msg = mHandler.obtainMessage(WHAT_REQUEST_DATA);
             msg.obj = data;
            mHandler.sendMessage(msg);
-           mDataLayout.setVisibility(View.VISIBLE);
-           mEmptyLayout.setVisibility(View.GONE);
         }
 
 //        RfidItem item = new RfidItem();
@@ -229,75 +242,44 @@ public class FindRfidActivity extends BaseActivity implements View.OnClickListen
     };
 
     private void getData(String epc) {
-        if(TextUtils.isEmpty(epc)) {
+        if(TextUtils.isEmpty(epc) || mList.size() == 0) {
             return;
         }
-        new GetRfidListRequest(this, true, new String[]{epc}, true).schedule(true, new RequestListener<List<RfidItem>>() {
-            @Override
-            public void onSuccess(List<RfidItem> result) {
-                if(result != null) {
-                    for(RfidItem item : result) {
-                        if(epc.equals(item.epc)) {
-                            mList.add(item);
-                            break;
-                        }
-                    }
-                    mAdapter.notifyDataSetChanged();
-                }
+        int count = 0;
+        for(RfidItem item : mList) {
+            if(epc.equals(item.epc)) {
+                item.isScan = true;
             }
-
-            @Override
-            public void onFailed(Throwable e) {
-                ToastUtil.toastLongMessage(e.getMessage());
+            if(item.isScan) {
+                count++;
             }
-        });
+        }
+        mAdapter.notifyDataSetChanged();
+        if(count == mList.size()) {
+            mHandler.removeMessages(WHAT_REQUEST_DATA);
+            mHandler.removeMessages(WHAT_DOWN_COUNT);
+            scanFinish();
+            mNextLayout.setVisibility(View.VISIBLE);
+        }
     }
 
     private void scanFinish() {
-        if(mList == null || mList.size() == 0) {
-            mTipTv.setText("未发现附近有RFID");
+        if(epcs.size() == 0) {
+            mTipTv.setText("巡检点扫描完成");
             mEmptyLayout.setVisibility(View.VISIBLE);
             mDataLayout.setVisibility(View.GONE);
         } else {
-            mTipTv.setText("RFID扫描结束");
+            mTipTv.setText("RFID设备扫描完成");
             mEmptyLayout.setVisibility(View.GONE);
             mDataLayout.setVisibility(View.VISIBLE);
         }
         close();
     }
 
-    private void inventory(boolean start) {
-        if (start) {
-
-            UHFReader.getInstance().setOnInventoryDataListener(new OnInventoryDataListener() {
-                @Override
-                public void onInventoryData(List<UHFTagEntity> tagEntityList) {
-//                    Log.e("TAG", "onInventoryData:一次回调--------  " + tagEntityList.size());
-                    if (tagEntityList != null && tagEntityList.size() > 0) {
-                        for (int k = 0; k < tagEntityList.size(); k++) {
-                            if (!TextUtils.isEmpty(tagEntityList.get(k).getEcpHex())) {
-//                                Message message = new Message();
-//                                message.what = 1;
-//                                message.obj = tagEntityList.get(k);
-//                                handler.sendMessage(message);
-//                                Utils.play();
-                                LogUtil.d(TAG, "onInventoryData：" + tagEntityList.get(k).getEcpHex());
-                            }
-                        }
-                    }
-                }
-            });
-
-            UHFReaderResult<Boolean> readerResult = UHFReader.getInstance().startInventory();
-            if (readerResult.getData()) {
-
-            } else {
-                ToastUtil.toastLongMessage("盘点失败");
-            }
-        } else {
-            UHFReaderResult<Boolean> booleanUHFReaderResult = UHFReader.getInstance().stopInventory();
-
-//            handler.removeMessages(2);
-        }
+    private void doNext() {
+        Intent i = new Intent(this, ExecuteInspectActivity.class);
+        i.putExtra("inspect_detail", mDetail);
+        startActivity(i);
+        finish();
     }
 }

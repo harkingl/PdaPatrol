@@ -34,6 +34,7 @@ import com.pda.patrol.entity.AddressInfo;
 import com.pda.patrol.entity.RfidItem;
 import com.pda.patrol.request.GetAddressListRequest;
 import com.pda.patrol.request.InstallInspectionRequest;
+import com.pda.patrol.request.UploadImgRequest;
 import com.pda.patrol.server.okhttp.RequestListener;
 import com.pda.patrol.util.FileUtil;
 import com.pda.patrol.util.GlideUtil;
@@ -64,7 +65,8 @@ public class InstallActivity extends BaseActivity implements View.OnClickListene
     private AddressInfo mSelectAddressInfo;
     private List<AddressInfo> mAddressList;
     private ImageSelectAdapter mImgAdapter;
-    private List<String> mImgList;
+    private ArrayList<String> mImgList;
+    private List<String> mFileIds = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -98,7 +100,7 @@ public class InstallActivity extends BaseActivity implements View.OnClickListene
 
         setView(mSelectItem);
         mImgList = new ArrayList<>();
-        mImgAdapter = new ImageSelectAdapter(this, mImgList);
+        mImgAdapter = new ImageSelectAdapter(this, mImgList, true);
         mImgGv.setAdapter(mImgAdapter);
         mImgGv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -143,7 +145,7 @@ public class InstallActivity extends BaseActivity implements View.OnClickListene
     private void setView(RfidItem item) {
         if(item != null) {
             GlideUtil.loadImage(mSelectImgIv, item.img, null);
-            mSelectIdTv.setText("RFID NO : " + item.id);
+            mSelectIdTv.setText("RFID NO : " + item.no);
             mSelectItem = item;
         }
     }
@@ -204,17 +206,24 @@ public class InstallActivity extends BaseActivity implements View.OnClickListene
             return;
         }
         String remark = mNoteEt.getText().toString();
-//        mSelectItem.address = address;
-//        Intent i = new Intent(this, PatrolDetailActivity.class);
-//        i.putExtra("rfid_info", mSelectItem);
-//        startActivity(i);
-        new InstallInspectionRequest(this, mSelectAddressInfo.address, mSelectAddressInfo.id, null, new String[]{mSelectItem.id}, remark).schedule(true, new RequestListener<Boolean>() {
-            @Override
-            public void onSuccess(Boolean result) {
-                ToastUtil.toastLongMessage("安装成功");
 
-                Intent i = new Intent(InstallActivity.this, PatrolDetailActivity.class);
-                i.putExtra("rfid_info", mSelectItem);
+        String[] fileIds = null;
+        if(mFileIds.size() > 0) {
+            fileIds = new String[mFileIds.size()];
+            mFileIds.toArray(fileIds);
+        }
+        new InstallInspectionRequest(this, mSelectAddressInfo.address, mSelectAddressInfo.id, fileIds, new String[]{mSelectItem.id}, remark).schedule(true, new RequestListener<String>() {
+            @Override
+            public void onSuccess(String result) {
+//                ToastUtil.toastLongMessage("安装成功");
+
+//                Intent i = new Intent(InstallActivity.this, PatrolDetailActivity.class);
+//                i.putExtra("rfid_info", mSelectItem);
+//                i.putExtra("imgs", mImgList);
+//                startActivity(i);
+                Intent i = new Intent(InstallActivity.this, SuccessActivity.class);
+                i.putExtra("from", 0);
+                i.putExtra("success_tip", getString(R.string.install_success_tip, result));
                 startActivity(i);
                 finish();
             }
@@ -234,6 +243,19 @@ public class InstallActivity extends BaseActivity implements View.OnClickListene
         if(requestCode == REQ_TAKE_PHOTO && resultCode == RESULT_OK) {
             mImgList.add(photoFile.getAbsolutePath());
             mImgAdapter.notifyDataSetChanged();
+            new UploadImgRequest(this, photoFile).schedule(true, new RequestListener<String>() {
+                @Override
+                public void onSuccess(String result) {
+                    if(!TextUtils.isEmpty(result)) {
+                        mFileIds.add(result);
+                    }
+                }
+
+                @Override
+                public void onFailed(Throwable e) {
+
+                }
+            });
         }
     }
 
@@ -329,7 +351,6 @@ public class InstallActivity extends BaseActivity implements View.OnClickListene
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        LogUtil.d(TAG, "#######onRequestPermissionsResult######" + grantResults.length);
         if(requestCode == REQ_TAKE_PHOTO) {
             for(int result : grantResults) {
                 if(result != PackageManager.PERMISSION_GRANTED) {

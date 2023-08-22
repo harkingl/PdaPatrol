@@ -26,7 +26,7 @@ public class InspectionDetail implements Serializable {
     public double lng;
     public double lat;
     public String nickname;
-    List<String> fileList;
+    public List<String> fileList;
     public List<RfidItem> rfidList;
 
 
@@ -45,7 +45,7 @@ public class InspectionDetail implements Serializable {
         JSONArray fileArray = obj.optJSONArray("filesInfo");
         if(fileArray != null && fileArray.length() > 0) {
             for(int i = 0; i < fileArray.length(); i++) {
-                fileList.add(fileArray.getString(i));
+                fileList.add((String) fileArray.get(i));
             }
         }
         JSONArray rfidArray = obj.optJSONArray("rfidsInfo");

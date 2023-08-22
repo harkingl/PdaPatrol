@@ -34,13 +34,21 @@ import java.util.List;
  */
 public class ImageSelectAdapter extends BaseListItemAdapter<String> {
     private static final int MAX_COUNT = 3;
-    public ImageSelectAdapter(Context context, List<String> list) {
+    // 是否可以添加图片
+    private boolean canAdd = true;
+    public ImageSelectAdapter(Context context, List<String> list, boolean canAdd) {
         super(context, list);
+
+        this.canAdd = canAdd;
     }
 
     @Override
     public int getCount() {
-        return items.size() >= MAX_COUNT ? MAX_COUNT : items.size() + 1;
+        if(items.size() >= MAX_COUNT) {
+            return MAX_COUNT;
+        }
+
+        return canAdd ? items.size() + 1 : items.size();
     }
 
     @Override
@@ -61,7 +69,7 @@ public class ImageSelectAdapter extends BaseListItemAdapter<String> {
         AbsListView.LayoutParams params = new AbsListView.LayoutParams(itemSize, itemSize);
         convertView.setLayoutParams(params);
 
-        if(position == getCount()-1 && items.size() < MAX_COUNT) {
+        if(canAdd && position == getCount()-1 && items.size() < MAX_COUNT) {
             holder.addView.setVisibility(View.VISIBLE);
             holder.iv.setVisibility(View.GONE);
 //            holder.addView.setOnClickListener(new View.OnClickListener() {
@@ -74,8 +82,11 @@ public class ImageSelectAdapter extends BaseListItemAdapter<String> {
         } else {
             holder.addView.setVisibility(View.GONE);
             holder.iv.setVisibility(View.VISIBLE);
-            GlideUtil.loadLocalImageWithCorner(holder.iv, items.get(position), itemSize, 8, null);
-//            setImageView(items.get(position), holder.iv);
+            if(items.get(position).startsWith("http")) {
+                GlideUtil.loadCornerImage(holder.iv, items.get(position), itemSize, null, 8);
+            } else {
+                GlideUtil.loadLocalImageWithCorner(holder.iv, items.get(position), itemSize, 8, null);
+            }
         }
 
         return convertView;

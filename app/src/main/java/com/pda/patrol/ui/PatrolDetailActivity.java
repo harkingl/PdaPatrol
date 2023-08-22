@@ -1,5 +1,6 @@
 package com.pda.patrol.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -10,16 +11,19 @@ import androidx.annotation.Nullable;
 import com.pda.patrol.R;
 import com.pda.patrol.baseclass.component.BaseActivity;
 import com.pda.patrol.baseclass.component.ITitleBarLayout;
+import com.pda.patrol.baseclass.component.NoScrollGridView;
 import com.pda.patrol.baseclass.component.TitleBarLayout;
 import com.pda.patrol.entity.InspectionDetail;
+import com.pda.patrol.entity.PagedListEntity;
 import com.pda.patrol.entity.RfidItem;
 import com.pda.patrol.entity.TaskInfo;
 import com.pda.patrol.request.GetInspectionDetailRequest;
 import com.pda.patrol.request.GetTaskListRequest;
 import com.pda.patrol.server.okhttp.RequestListener;
-import com.pda.patrol.util.GlideUtil;
+import com.pda.patrol.util.DateUtil;
 import com.pda.patrol.util.ToastUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PatrolDetailActivity extends BaseActivity implements View.OnClickListener {
@@ -37,10 +41,12 @@ public class PatrolDetailActivity extends BaseActivity implements View.OnClickLi
     private TextView mEndTimeTv;
     private TextView mInstallerTv;
     private TextView mInstallTimeTv;
+    private NoScrollGridView mInstallImgsGv;
     private TextView mRemarkTv;
     private View mHistoryLayout;
     private RfidItem mItem;
     private String mId;
+    private ArrayList<String> mImgList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,6 +70,7 @@ public class PatrolDetailActivity extends BaseActivity implements View.OnClickLi
         mEndTimeTv = findViewById(R.id.detail_end_time_tv);
         mInstallerTv = findViewById(R.id.detail_installer_tv);
         mInstallTimeTv = findViewById(R.id.detail_install_time_tv);
+        mInstallImgsGv = findViewById(R.id.detail_install_imgs_gv);
         mHistoryLayout = findViewById(R.id.detail_inspection_history_ll);
 
         mGotoInspectTv.setOnClickListener(this);
@@ -72,6 +79,7 @@ public class PatrolDetailActivity extends BaseActivity implements View.OnClickLi
 
     private void initData() {
         mItem = (RfidItem) getIntent().getSerializableExtra("rfid_info");
+        mImgList = (ArrayList<String>) getIntent().getSerializableExtra("imgs");
 
 //        if(mItem != null) {
 //            GlideUtil.loadImage(mImgIv, mItem.img, null);
@@ -80,7 +88,7 @@ public class PatrolDetailActivity extends BaseActivity implements View.OnClickLi
 //            mTypeTv.setText("巡检点类型：" + mItem.type);
 //        }
 
-        mId = "1689471672656072704";
+        mId = "1688841125726523392";
         new GetInspectionDetailRequest(this, mId).schedule(false, new RequestListener<InspectionDetail>() {
             @Override
             public void onSuccess(InspectionDetail result) {
@@ -93,14 +101,14 @@ public class PatrolDetailActivity extends BaseActivity implements View.OnClickLi
             }
         });
 
-        new GetTaskListRequest(this, 0, mId).schedule(false, new RequestListener<List<TaskInfo>>() {
+        new GetTaskListRequest(this, 0, mId, false, 1, 1).schedule(false, new RequestListener<PagedListEntity<TaskInfo>>() {
             @Override
-            public void onSuccess(List<TaskInfo> result) {
-                if(result != null && result.size() > 0) {
-                    TaskInfo info = result.get(0);
+            public void onSuccess(PagedListEntity<TaskInfo> result) {
+                if(result.getList() != null && result.getList().size() > 0) {
+                    TaskInfo info = result.getList().get(0);
                     mTobeExecutedLayout.setVisibility(View.VISIBLE);
-                    mCreatedTimeTv.setText(info.crt);
-                    mEndTimeTv.setText(info.endTime);
+                    mCreatedTimeTv.setText(DateUtil.convertTimeFormat(info.crt, DateUtil.FORMAT_YYYYMMDDTHHMMSSTZD, DateUtil.FORMAT_YYYYMMDDHHMM));
+                    mEndTimeTv.setText(DateUtil.convertTimeFormat(info.endTime, DateUtil.FORMAT_YYYYMMDDTHHMMSSTZD, DateUtil.FORMAT_YYYYMMDDHHMM));
                 }
             }
 
@@ -119,7 +127,18 @@ public class PatrolDetailActivity extends BaseActivity implements View.OnClickLi
         mIdTv.setText("巡检点" + mId);
         mAddressTv.setText("安装网点：" + detail.address);
         mInstallerTv.setText(detail.nickname);
-        mInstallTimeTv.setText(detail.crt);
+        mInstallTimeTv.setText(DateUtil.convertTimeFormat(detail.crt, DateUtil.FORMAT_YYYYMMDDTHHMMSSTZD, DateUtil.FORMAT_YYYYMMDDHHMM));
+//        if(detail.fileList != null && detail.fileList.size() > 0) {
+//            ImageSelectAdapter adapter = new ImageSelectAdapter(this, detail.fileList, false);
+//            mInstallImgsGv.setAdapter(adapter);
+//            mInstallImgsGv.setVisibility(View.VISIBLE);
+//        } else {
+//            mInstallImgsGv.setVisibility(View.GONE);
+//        }
+
+        ImageSelectAdapter adapter = new ImageSelectAdapter(this, mImgList, false);
+        mInstallImgsGv.setAdapter(adapter);
+        mInstallImgsGv.setVisibility(View.VISIBLE);
     }
 
     private void configTitleBar() {
@@ -132,20 +151,16 @@ public class PatrolDetailActivity extends BaseActivity implements View.OnClickLi
     public void onClick(View view) {
         if(view == mTitlebarLayout.getLeftGroup()) {
             finish();
+        } else if(view == mHistoryLayout) {
+            gotoHistoryPage(2);
+        } else if(view == mGotoInspectTv) {
+            gotoHistoryPage(0);
         }
     }
 
-    private void getTaskList() {
-        new GetTaskListRequest(this, -1, "").schedule(false, new RequestListener<List<TaskInfo>>() {
-            @Override
-            public void onSuccess(List<TaskInfo> result) {
-
-            }
-
-            @Override
-            public void onFailed(Throwable e) {
-                ToastUtil.toastLongMessage(e.getMessage());
-            }
-        });
+    private void gotoHistoryPage(int index) {
+        Intent i = new Intent(this, TaskListActivity.class);
+        i.putExtra("curr_index", index);
+        startActivity(i);
     }
 }

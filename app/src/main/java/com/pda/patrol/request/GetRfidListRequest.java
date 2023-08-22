@@ -40,8 +40,12 @@ public class GetRfidListRequest extends BaseRequest<List<RfidItem>> {
         obj.put("scan", scan);
         if(epcs != null) {
 //            obj.put("epcs[]", TextUtils.join(",", epcs));
-//            obj.put("epcs[]", Arrays.toString(epcs));
-            obj.put("epc[]", epcs[0]);
+            JSONArray array = new JSONArray();
+            for(String s : epcs) {
+                array.put(s);
+            }
+            obj.put("epcs", array);
+//            obj.put("epc[]", epcs[0]);
         }
         obj.put("ad", ad);
 
