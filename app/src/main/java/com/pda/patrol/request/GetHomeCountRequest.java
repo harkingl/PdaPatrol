@@ -2,38 +2,35 @@ package com.pda.patrol.request;
 
 import android.content.Context;
 
-import com.pda.patrol.entity.InspectionDetail;
+import com.pda.patrol.entity.HomeCountInfo;
 import com.pda.patrol.server.okhttp.BaseRequest;
 import com.pda.patrol.server.util.UrlManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class GetInspectionDetailRequest extends BaseRequest<InspectionDetail> {
-    private String id;
-    public GetInspectionDetailRequest(Context context, String id) {
+public class GetHomeCountRequest extends BaseRequest<HomeCountInfo> {
+    public GetHomeCountRequest(Context context) {
         super(context);
-        this.id = id;
     }
 
     @Override
     protected String url() {
-        return UrlManager.INSTALL_INSPECTION_DETAIL + "/" + id;
+        return UrlManager.HOME_COUNT;
     }
 
     @Override
     protected String body()  throws JSONException {
         JSONObject obj = new JSONObject();
-//        obj.put("id", id);
 
         return obj.toString();
     }
 
     @Override
-    protected InspectionDetail result(JSONObject json) throws Exception {
+    protected HomeCountInfo result(JSONObject json) throws Exception {
         JSONObject data = json.optJSONObject("data");
 
-        InspectionDetail result = new InspectionDetail();
+        HomeCountInfo result = new HomeCountInfo();
         if(data != null) {
             return result.parse(data);
         }

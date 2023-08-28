@@ -9,6 +9,7 @@ public class DateUtil {
 
     public static final String FORMAT_YYYYMMDDTHHMMSSTZD = "yyyy-MM-dd'T'HH:mm:ssz";
     public static final String FORMAT_YYYYMMDDHHMM = "yyyy.MM.dd HH:mm";
+    public static final String FORMAT_YYYYMMDD = "yyyy.MM.dd";
     public static String convertTimeFormat(String time, String sourceFormat, String targetFormat) {
         try {
             Date date = new SimpleDateFormat(sourceFormat).parse(time);

@@ -37,7 +37,7 @@ public class OpenTask extends AsyncTask<String, Integer, UHFReaderResult> {
                     UHFReader.getInstance().setInventoryModeForPower(InventoryModeForPower.POWER_SAVING_MODE);
                 }
                 UHFReader.getInstance().setPower(HcPreferences.getInstance().getInt(MainApplication.getInstance(), "pda", "power"));
-                ToastUtil.toastLongMessage("连接成功");
+//                ToastUtil.toastLongMessage("连接成功");
             } else {
                 ToastUtil.toastLongMessage("连接失败");
             }

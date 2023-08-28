@@ -97,6 +97,8 @@ public class SuccessActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void gotoHomePage() {
-
+        Intent i = new Intent(this, HomeActivity.class);
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(i);
     }
 }

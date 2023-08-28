@@ -23,7 +23,7 @@
             android:id="@+id/detail_img_iv"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:src="@drawable/ic_rfid_img1"/>
+            android:src="@drawable/ic_inspect_point_default"/>
         <TextView
             android:id="@+id/detail_id_tv"
             android:layout_width="0dp"
@@ -57,57 +57,91 @@
         android:visibility="gone"
         tools:text="巡检点类型：智能T型"/>
 
-    <RelativeLayout
-        android:id="@+id/detail_tobe_executed_ll"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="10dp"
         android:background="@drawable/white_bg_shape"
         android:layout_marginHorizontal="20dp"
-        android:padding="20dp"
-        android:visibility="gone"
-        android:orientation="horizontal">
+        android:paddingVertical="20dp"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:orientation="horizontal"
+            android:gravity="bottom">
+            <TextView
+                android:id="@+id/detail_rfid_title_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_color_1"
+                android:text="安装的RFID设备"
+                android:textSize="14sp"
+                android:textStyle="bold"/>
+            <TextView
+                android:id="@+id/detail_rfid_count_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="6dp"
+                android:textColor="@color/text_color_4"
+                tools:text="共3个"
+                android:textSize="12sp"/>
+        </LinearLayout>
+        <com.pda.patrol.baseclass.component.NoScrollGridView
+            android:id="@+id/detail_rfid_gv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="18dp"
+            android:numColumns="3"
+            android:horizontalSpacing="15dp"
+            android:verticalSpacing="15dp"/>
+    </LinearLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/white_bg_shape"
+        android:layout_marginHorizontal="20dp"
+        android:padding="20dp">
         <TextView
-            android:id="@+id/detail_tobe_executed_tv"
+            android:id="@+id/detail_task_title_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
             android:textColor="@color/text_color_1"
+            android:text="当前巡检任务"
             android:textSize="14sp"
-            android:textStyle="bold"
-            android:text="待执行巡检"/>
+            android:textStyle="bold"/>
         <TextView
-            android:id="@+id/detail_goto_inspect_tv"
+            android:id="@+id/detail_task_count_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/border_blue_shape"
-            android:paddingVertical="3dp"
-            android:paddingHorizontal="15dp"
+            android:layout_marginLeft="6dp"
+            android:layout_marginBottom="1dp"
+            android:textColor="@color/text_color_4"
+            android:layout_toRightOf="@+id/detail_task_title_text"
+            android:layout_alignBottom="@+id/detail_task_title_text"
+            tools:text="共3个"
+            android:textSize="12sp"/>
+        <ImageView
+            android:id="@+id/detail_task_more_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:textColor="@color/common_blue_color"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            android:text="去巡检"/>
+            android:layout_alignBottom="@id/detail_task_title_text"
+            android:src="@drawable/arrow_right"/>
         <TextView
-            android:id="@+id/detail_create_time_tv"
+            android:id="@+id/detail_task_time_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="11dp"
-            android:layout_below="@+id/detail_tobe_executed_tv"
-            android:layout_alignLeft="@+id/detail_tobe_executed_tv"
-            android:textColor="@color/text_color_1"
+            android:layout_below="@+id/detail_task_title_text"
+            android:layout_alignLeft="@+id/detail_task_title_text"
+            android:textColor="@color/text_color_2"
             android:textSize="12sp"
-            tools:text="创建时间：2023.08.02 10:00"/>
-        <TextView
-            android:id="@+id/detail_end_time_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_below="@+id/detail_create_time_tv"
-            android:layout_alignLeft="@+id/detail_tobe_executed_tv"
-            android:textColor="@color/text_color_1"
-            android:textSize="12sp"
-            tools:text="截止时间：2023.09.03 10:00"/>
+            tools:text="任务时间：2023.09.20 -2023.09.30"/>
     </RelativeLayout>
 
     <LinearLayout

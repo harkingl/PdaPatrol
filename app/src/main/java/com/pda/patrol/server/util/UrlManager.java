@@ -27,7 +27,11 @@ public class UrlManager {
     /**
      * 安装巡检点
      */
-    public static final String INSTALL_INSPECTION = "/api/v1/tbinspection";
+    public static final String INSTALL_INSPECTION = "/api/v1/tbinspection/install";
+    /**
+     * 巡检点详情
+     */
+    public static final String INSTALL_INSPECTION_DETAIL = "/api/v1/tbinspection";
 
     /**
      * 获取任务列表
@@ -48,4 +52,11 @@ public class UrlManager {
      * 完成任务
      */
     public static final String TASK_DONE = "/api/v1/tbtask/done/";
+
+    public static final String HOME_COUNT = "/api/v1/openApi/statistic/count";
+
+    /**
+     * 巡检点列表
+     */
+    public static final String GET_INSPECT_LIST = "/api/v1/tbinspection/page";
 }

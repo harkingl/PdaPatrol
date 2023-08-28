@@ -22,16 +22,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TaskListFragment extends BaseFragment {
-    private static final int PAGE_SIZE = 5;
+    private static final int PAGE_SIZE = 20;
     private PagedItemListView mListView;
 
     private TaskListAdapter mAdapter;
     private List<TaskInfo> mList;
     private int mTaskState = -1;
     private int mPageNo = 1;
+    private String mInspectId;
 
-    public TaskListFragment(int taskState) {
+    public TaskListFragment(int taskState, String inspectId) {
         this.mTaskState = taskState;
+        this.mInspectId = inspectId;
     }
 
     @Nullable
@@ -68,7 +70,7 @@ public class TaskListFragment extends BaseFragment {
     }
 
     private void getTaskList() {
-        new GetTaskListRequest(getActivity(), mTaskState, "", false, mPageNo, PAGE_SIZE).schedule(false, new RequestListener<PagedListEntity<TaskInfo>>() {
+        new GetTaskListRequest(getActivity(), mTaskState, mInspectId, false, mPageNo, PAGE_SIZE).schedule(false, new RequestListener<PagedListEntity<TaskInfo>>() {
             @Override
             public void onSuccess(PagedListEntity<TaskInfo> result) {
                 mListView.onLoadDone();

@@ -62,50 +62,51 @@
                 android:layout_marginLeft="20dp"
                 android:textColor="@color/text_color_1"
                 android:textSize="16sp"
-                android:text="1、巡检点定位"/>
+                android:text="1、巡检设备"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/white_bg_shape"
                 android:layout_marginHorizontal="20dp"
+                android:background="@drawable/white_bg_shape"
+                android:gravity="center_vertical"
                 android:padding="20dp"
                 android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/rfid_item_img_iv"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"/>
+
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:layout_marginLeft="16dp"
                     android:orientation="vertical">
                     <TextView
+                        android:id="@+id/rfid_item_id_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/text_color_1"
-                        android:textSize="12sp"
-                        android:textStyle="bold"
-                        android:text="安装网点："/>
-                    <TextView
-                        android:id="@+id/execute_address_tv"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="3dp"
                         android:lines="1"
                         android:ellipsize="end"
+                        android:textSize="14sp"
                         android:textColor="@color/text_color_1"
-                        android:textSize="12sp"
                         android:textStyle="bold"
-                        tools:text="闵行区-春申路-莲花南路交叉口"/>
+                        tools:text="RFID 编号. YYbox-00001"/>
+                    <TextView
+                        android:id="@+id/rfid_item_type_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        android:textSize="12sp"
+                        android:textColor="@color/text_color_2"
+                        tools:text="设备类型：智能BOX"/>
                 </LinearLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:drawableTop="@drawable/ic_map"
-                    android:drawablePadding="3dp"
-                    android:textColor="@color/text_color_3"
-                    android:textSize="10sp"
-                    android:text="点击定位"/>
             </LinearLayout>
 
             <LinearLayout

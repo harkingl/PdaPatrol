@@ -7,4 +7,12 @@
     <string name="frid_count">共%d个</string>
     <string name="install_success_tip">你已完成 巡检点%s 的安装。</string>
     <string name="inspect_success_tip">你已完成设备 RFID 编号. %s 的巡检。</string>
+    <string name="install_inspect_point"><u>安装\n巡检点</u></string>
+    <string name="install_inspect_point_tip">安装前请确认\n已准备好设备</string>
+    <string name="home_inspect_point"><u>巡检点</u></string>
+    <string name="home_install_count">已安装%d个</string>
+    <string name="home_inspect_history"><u>巡检记录</u></string>
+    <string name="home_install_history_count">已完成%d次</string>
+    <string name="home_user_name">你好，%s</string>
+    <string name="inspect_rfid_count">安装设备：%d个</string>
 </resources>

@@ -23,7 +23,7 @@
             android:textSize="16sp"
             android:textColor="@color/text_color_1"
             android:textStyle="bold"
-            android:text="巡检点"/>
+            android:text="RFID 编号. "/>
         <TextView
             android:id="@+id/task_item_id_tv"
             android:layout_width="0dp"
@@ -34,7 +34,7 @@
             android:textSize="16sp"
             android:textColor="@color/text_color_1"
             android:textStyle="bold"
-            tools:text="8820230001"/>
+            tools:text="YYbox-00001"/>
         <TextView
             android:id="@+id/task_item_status_tv"
             android:layout_width="wrap_content"
@@ -58,9 +58,9 @@
             android:layout_height="wrap_content"
             android:textSize="12sp"
             android:textColor="@color/text_color_2"
-            android:text="安装设备："/>
+            android:text="设备类型："/>
         <TextView
-            android:id="@+id/task_item_count_tv"
+            android:id="@+id/task_item_type_tv"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -89,48 +89,14 @@
             android:textColor="@color/text_color_1"
             tools:text="闵行区-春申路-莲花南路交叉口"/>
     </LinearLayout>
-    <LinearLayout
+    <TextView
+        android:id="@+id/task_item_time_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="9dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:textColor="@color/text_color_1"
-            android:text="创建时间："/>
-        <TextView
-            android:id="@+id/task_item_create_time_tv"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textSize="12sp"
-            android:textColor="@color/text_color_1"
-            tools:text="2023.09.20 10:00"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="9dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:textColor="@color/text_color_1"
-            android:text="截止时间："/>
-        <TextView
-            android:id="@+id/task_item_end_time_tv"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textSize="12sp"
-            android:textColor="@color/text_color_1"
-            tools:text="2023.09.30 10:00"/>
-    </LinearLayout>
+        android:textSize="12sp"
+        android:textColor="@color/text_color_1"
+        tools:text="任务时间：2023.09.20-2023.09.30"/>
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"

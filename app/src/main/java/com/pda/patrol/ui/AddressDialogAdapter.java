@@ -50,6 +50,7 @@ public class AddressDialogAdapter extends BaseListItemAdapter<AddressInfo> {
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if(b) {
                     mSelectedItem = item;
+                    notifyDataSetChanged();
                 }
             }
         });

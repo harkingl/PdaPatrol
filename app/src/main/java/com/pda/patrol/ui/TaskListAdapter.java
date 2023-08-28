@@ -33,10 +33,9 @@ public class TaskListAdapter extends BaseListItemAdapter<TaskInfo> {
             convertView = inflater.inflate(R.layout.task_list_item, null);
             holder.idTv = convertView.findViewById(R.id.task_item_id_tv);
             holder.statusTv = convertView.findViewById(R.id.task_item_status_tv);
-            holder.countTv = convertView.findViewById(R.id.task_item_count_tv);
+            holder.typeTv = convertView.findViewById(R.id.task_item_type_tv);
             holder.addressTv = convertView.findViewById(R.id.task_item_address_tv);
-            holder.createTimeTv = convertView.findViewById(R.id.task_item_create_time_tv);
-            holder.endTimeTv = convertView.findViewById(R.id.task_item_end_time_tv);
+            holder.timeTv = convertView.findViewById(R.id.task_item_time_tv);
             holder.detailTv = convertView.findViewById(R.id.task_item_detail_tv);
             holder.inspectTv = convertView.findViewById(R.id.task_item_goto_inspect_tv);
 
@@ -46,19 +45,30 @@ public class TaskListAdapter extends BaseListItemAdapter<TaskInfo> {
         }
 
         TaskInfo item = items.get(position);
-        holder.idTv.setText(item.inspectionId);
+        holder.idTv.setText(item.rfidNo);
         holder.statusTv.setVisibility(View.GONE);
         setState(holder.statusTv, item.taskState);
-        int count = item.rfidList == null ? 0 : item.rfidList.size();
-        holder.countTv.setText(count + "个");
+        holder.typeTv.setText(item.rfidTypeName);
         holder.addressTv.setText(item.address);
-        holder.createTimeTv.setText(DateUtil.convertTimeFormat(item.crt, DateUtil.FORMAT_YYYYMMDDTHHMMSSTZD, DateUtil.FORMAT_YYYYMMDDHHMM));
-        holder.endTimeTv.setText(DateUtil.convertTimeFormat(item.endTime, DateUtil.FORMAT_YYYYMMDDTHHMMSSTZD, DateUtil.FORMAT_YYYYMMDDHHMM));
+        if(item.taskState == 0 || item.taskState == 2) {
+            String startTime = DateUtil.convertTimeFormat(item.crt, DateUtil.FORMAT_YYYYMMDDTHHMMSSTZD, DateUtil.FORMAT_YYYYMMDD);
+            String endTime = DateUtil.convertTimeFormat(item.endTime, DateUtil.FORMAT_YYYYMMDDTHHMMSSTZD, DateUtil.FORMAT_YYYYMMDD);
+            holder.timeTv.setText("任务时间：" + startTime + "- " + endTime);
+        } else {
+            holder.timeTv.setText("巡检时间：" + DateUtil.convertTimeFormat(item.dealTime, DateUtil.FORMAT_YYYYMMDDTHHMMSSTZD, DateUtil.FORMAT_YYYYMMDDHHMM));
+        }
         setInspectionBtn(holder.inspectTv, item.taskState, item.isNormal);
         holder.detailTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(context, TaskDetailActivity.class);
+                Intent i = null;
+                if(item.taskState == 0) {
+                    i = new Intent(context, TaskTodoDetailActivity.class);
+                } else if(item.taskState == 2) {
+                    i = new Intent(context, TaskOverdueDetailActivity.class);
+                } else {
+                    i = new Intent(context, TaskFinishDetailActivity.class);
+                }
                 i.putExtra("task_info", item);
                 context.startActivity(i);
             }
@@ -142,10 +152,9 @@ public class TaskListAdapter extends BaseListItemAdapter<TaskInfo> {
     class ViewHolder {
         public TextView idTv;
         public TextView statusTv;
-        public TextView countTv;
+        public TextView typeTv;
         public TextView addressTv;
-        public TextView createTimeTv;
-        public TextView endTimeTv;
+        public TextView timeTv;
         public TextView detailTv;
         public TextView inspectTv;
     }

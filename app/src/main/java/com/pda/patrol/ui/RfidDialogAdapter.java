@@ -38,7 +38,7 @@ public class RfidDialogAdapter extends BaseListItemAdapter<RfidItem> {
 
         RfidItem item = items.get(position);
         GlideUtil.loadImage(holder.iv, item.img, null);
-        holder.idTv.setText("RFID 编号. " + item.id);
+        holder.idTv.setText("RFID 编号. " + item.no);
         holder.typeTv.setText("设备类型：" + item.type);
 
         return convertView;

@@ -61,7 +61,7 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".ui.TaskDetailActivity"
+            android:name=".ui.TaskFinishDetailActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"/>
         <activity
@@ -75,6 +75,22 @@
 
         <activity
             android:name=".ui.SuccessActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ui.HomeActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ui.TaskTodoDetailActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ui.TaskOverdueDetailActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ui.InspectPointActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"/>
     </application>

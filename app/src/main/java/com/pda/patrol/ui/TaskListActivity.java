@@ -24,6 +24,7 @@ public class TaskListActivity extends BaseActivity {
     private List<BaseFragment> fragments;
     private FragmentAdapter fragmentAdapter;
     private int mCurrentIndex = 0;
+    private String mInspectId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,6 +43,8 @@ public class TaskListActivity extends BaseActivity {
 
     private void initData() {
         mCurrentIndex = getIntent().getIntExtra("curr_index", 0);
+        mInspectId = getIntent().getStringExtra("inspect_id");
+
         mStateList = new ArrayList<>();
         mStateList.add(new TaskStateItem(0, "待执行"));
         mStateList.add(new TaskStateItem(-1, "全部"));
@@ -61,7 +64,7 @@ public class TaskListActivity extends BaseActivity {
 
         fragments = new ArrayList<>();
         for(TaskStateItem item : mStateList) {
-            fragments.add(new TaskListFragment(item.taskState));
+            fragments.add(new TaskListFragment(item.taskState, mInspectId));
         }
         fragmentAdapter = new FragmentAdapter(this);
         fragmentAdapter.setFragmentList(fragments);

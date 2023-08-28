@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/transparent"
     android:orientation="vertical">
 
@@ -30,31 +31,42 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:textColor="@color/black"
-                android:text="选择异常类型"
+                android:text="巡检点设备"
                 android:textSize="16sp"
                 android:textStyle="bold"/>
+            <TextView
+                android:id="@+id/dialog_count_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="1dp"
+                android:textColor="@color/text_color_1"
+                android:layout_toRightOf="@+id/dialog_common_view_title_text"
+                android:layout_alignBottom="@+id/dialog_common_view_title_text"
+                android:text="共3个"
+                android:textSize="12sp"/>
         </RelativeLayout>
-
-        <com.pda.patrol.baseclass.component.NoScrollListView
-            android:id="@+id/dialog_abnormal_type_lv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="17dp"
-            android:listSelector="@color/transparent"
-            android:divider="@color/transparent"
-            android:dividerHeight="25dp"/>
-
         <TextView
-            android:id="@+id/dialog_ok_tv"
+            android:id="@+id/dialog_plan_time_tv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
-            android:layout_marginBottom="32dp"
-            android:gravity="center"
-            android:paddingVertical="13dp"
-            android:background="@drawable/btn_blue_bg_shape"
-            android:textSize="16dp"
-            android:textColor="@color/white"
-            android:text="确定"/>
+            android:layout_marginTop="6dp"
+            android:textSize="12sp"
+            android:textColor="@color/text_color_4"
+            tools:text="计划巡检时间：2023.09.20 10:00-2023.09.30 10:00"/>
+
+        <com.pda.patrol.baseclass.component.MaxHeightScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none"
+            android:layout_marginTop="10dp">
+            <com.pda.patrol.baseclass.component.NoScrollListView
+                android:id="@+id/dialog_frid_lv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:listSelector="@color/transparent"
+                android:divider="@color/transparent"
+                android:dividerHeight="6dp"/>
+        </com.pda.patrol.baseclass.component.MaxHeightScrollView>
     </LinearLayout>
 </LinearLayout>

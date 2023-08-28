@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/transparent"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:id="@+id/dialog_common_view_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:padding="20dp"
+        android:background="@drawable/white_bg_shape2"
+        android:orientation="vertical" >
+        <ImageView
+            android:id="@+id/dialog_common_view_close_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="3dp"
+            android:layout_gravity="right"
+            android:src="@drawable/ic_close"/>
+
+        <TextView
+            android:id="@+id/dialog_common_view_title_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="30dp"
+            android:textColor="@color/black"
+            android:text="确定要退出当前账号？"
+            android:textSize="18sp"/>
+
+        <TextView
+            android:id="@+id/dialog_logout_tv"
+            android:layout_width="240dp"
+            android:layout_height="45dp"
+            android:layout_marginTop="30dp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:background="@drawable/btn_scan_bg_shape"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:text="退出"/>
+
+        <TextView
+            android:id="@+id/dialog_cancel_tv"
+            android:layout_width="240dp"
+            android:layout_height="45dp"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:background="@drawable/btn_border_bg_gray_shape"
+            android:textColor="@color/text_color_1"
+            android:textSize="16sp"
+            android:text="取消"/>
+    </LinearLayout>
+</LinearLayout>

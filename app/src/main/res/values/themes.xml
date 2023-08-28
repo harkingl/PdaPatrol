@@ -15,4 +15,15 @@
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowSoftInputMode">stateAlwaysVisible|adjustPan</item>
     </style>
+
+    <declare-styleable name="ConstraintHeightView">
+        <attr name="maxHeight" format="dimension"/>
+    </declare-styleable>
+
+    <style name="popupwindow">
+        <item name="android:windowEnterAnimation">@anim/popup_window_enter</item>
+        <!-- 指定显示的动画xml -->
+        <item name="android:windowExitAnimation">@anim/popup_window_exit</item>
+        <!-- 指定消失的动画xml -->
+    </style>
 </resources>

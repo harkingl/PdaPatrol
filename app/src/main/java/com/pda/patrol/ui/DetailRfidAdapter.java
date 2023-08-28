@@ -14,10 +14,10 @@ import com.pda.patrol.util.GlideUtil;
 import java.util.List;
 
 /***
- * 执行巡检扫描-rfid列表adapter
+ * rfid列表adapter
  */
-public class InspectRfidListAdapter extends BaseListItemAdapter<RfidItem> {
-    public InspectRfidListAdapter(Context context, List<RfidItem> list) {
+public class DetailRfidAdapter extends BaseListItemAdapter<RfidItem> {
+    public DetailRfidAdapter(Context context, List<RfidItem> list) {
         super(context, list);
     }
 
@@ -26,9 +26,9 @@ public class InspectRfidListAdapter extends BaseListItemAdapter<RfidItem> {
         ViewHolder holder = null;
         if(convertView == null) {
             holder = new ViewHolder();
-            convertView = inflater.inflate(R.layout.inspect_rfid_list_item, null);
+            convertView = inflater.inflate(R.layout.detail_rfid_item, null);
+            holder.iv = convertView.findViewById(R.id.rfid_item_img_iv);
             holder.idTv = convertView.findViewById(R.id.rfid_item_id_tv);
-            holder.scanTv = convertView.findViewById(R.id.rfid_item_scan_tv);
 
             convertView.setTag(holder);
         } else {
@@ -36,15 +36,14 @@ public class InspectRfidListAdapter extends BaseListItemAdapter<RfidItem> {
         }
 
         RfidItem item = items.get(position);
-        holder.idTv.setText("RFID 编号. " + item.no);
-//        holder.scanTv.setVisibility(item.isScan ? View.VISIBLE : View.GONE);
-        holder.scanTv.setVisibility(View.GONE);
+        GlideUtil.loadImage(holder.iv, item.img, null);
+        holder.idTv.setText(item.no);
 
         return convertView;
     }
 
     class ViewHolder {
+        public ImageView iv;
         public TextView idTv;
-        public TextView scanTv;
     }
 }

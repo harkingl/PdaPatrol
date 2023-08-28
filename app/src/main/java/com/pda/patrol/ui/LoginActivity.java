@@ -175,7 +175,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             public void onSuccess(UserInfo result) {
                 ToastUtil.toastLongMessage("登录成功");
 
-                startActivity(new Intent(LoginActivity.this, FindRfidActivity.class));
+                startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                 finish();
 //                startActivity(new Intent(LoginActivity.this, TaskListActivity.class));
             }

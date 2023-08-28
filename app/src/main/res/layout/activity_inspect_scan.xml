@@ -26,6 +26,7 @@
         android:textColor="@color/text_color_1"
         android:textSize="48sp"
         android:textStyle="bold"
+        android:visibility="gone"
         tools:text="3"/>
     <TextView
         android:id="@+id/inspect_scan_tip_tv"
@@ -37,87 +38,63 @@
         android:textSize="18sp"
         android:textStyle="bold"
         android:text="正在扫描附近的巡检点..."/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="20dp"
+        android:textColor="@color/text_color_2"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        android:text="已扫描的RFID设备"/>
+
+
     <LinearLayout
-        android:id="@+id/inspect_scan_count_ll"
+        android:id="@+id/inspect_scan_rfid_ll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginRight="42dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginHorizontal="20dp"
+        android:background="@drawable/white_bg_shape"
+        android:gravity="center_vertical"
+        android:padding="20dp"
+        android:visibility="gone"
         android:orientation="horizontal">
-        <TextView
+
+        <ImageView
+            android:id="@+id/rfid_item_img_iv"
+            android:layout_width="36dp"
+            android:layout_height="36dp"/>
+
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textColor="@color/text_color_2"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            tools:text="已扫描的巡检点"/>
-        <TextView
-            android:id="@+id/inspect_scan_count_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/text_color_4"
-            android:textSize="10sp"
-            android:textStyle="bold"
-            android:visibility="gone"
-            tools:text="共4个设备"/>
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/inspect_scan_data_ll"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="14dp"
-        android:layout_marginHorizontal="20dp"
-        android:background="@drawable/white_bg_shape"
-        tools:visibility="visible"
-        android:orientation="vertical">
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fillViewport="true">
-            <LinearLayout
-                android:layout_width="match_parent"
+            android:layout_marginLeft="16dp"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/rfid_item_id_tv"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <com.pda.patrol.baseclass.component.NoScrollListView
-                    android:id="@+id/inspect_scan_rfid_lv"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="30dp"
-                    android:listSelector="@color/transparent"
-                    android:divider="@color/transparent"
-                    android:dividerHeight="6dp"/>
-            </LinearLayout>
-        </ScrollView>
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/inspect_scan_empty_ll"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="18dp"
-        android:layout_marginLeft="20dp"
-        android:gravity="center_horizontal"
-        android:visibility="gone"
-        android:orientation="vertical">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/text_color_1"
-            android:textSize="14sp"
-            android:text="没有找到巡检点的RFID,请确认巡检点在附近。"/>
-        <TextView
-            android:id="@+id/inspect_scan_rescan_tv"
-            android:layout_width="173dp"
-            android:layout_height="45dp"
-            android:layout_marginTop="15dp"
-            android:gravity="center"
-            android:background="@drawable/btn_scan_bg_shape"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:text="重新扫描"/>
+                android:lines="1"
+                android:ellipsize="end"
+                android:textSize="14sp"
+                android:textColor="@color/text_color_1"
+                android:textStyle="bold"
+                tools:text="RFID 编号. YYbox-00001"/>
+            <TextView
+                android:id="@+id/rfid_item_type_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:textSize="12sp"
+                android:textColor="@color/text_color_2"
+                tools:text="设备类型：智能BOX"/>
+        </LinearLayout>
+
     </LinearLayout>
 
     <View
@@ -132,6 +109,7 @@
         android:background="@color/white"
         android:paddingHorizontal="20dp"
         android:paddingVertical="15dp"
+        android:visibility="gone"
         android:orientation="vertical">
         <TextView
             android:id="@+id/inspect_scan_next_tv"

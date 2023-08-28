@@ -33,6 +33,7 @@ import com.pda.patrol.baseclass.component.NoScrollGridView;
 import com.pda.patrol.baseclass.component.NoScrollListView;
 import com.pda.patrol.baseclass.component.TitleBarLayout;
 import com.pda.patrol.entity.InspectionDetail;
+import com.pda.patrol.entity.RfidItem;
 import com.pda.patrol.entity.TypeInfo;
 import com.pda.patrol.entity.UserInfo;
 import com.pda.patrol.request.GetTypeListRequest;
@@ -40,6 +41,7 @@ import com.pda.patrol.request.TaskDoneRequest;
 import com.pda.patrol.request.UploadImgRequest;
 import com.pda.patrol.server.okhttp.RequestListener;
 import com.pda.patrol.util.FileUtil;
+import com.pda.patrol.util.GlideUtil;
 import com.pda.patrol.util.LogUtil;
 import com.pda.patrol.util.ToastUtil;
 
@@ -57,7 +59,9 @@ public class ExecuteInspectActivity extends BaseActivity implements View.OnClick
     private static final int MAX_COUNT = 3;
     private TitleBarLayout mTitlebarLayout;
     private TextView mIdTv;
-    private TextView mAddressTv;
+    private ImageView mRfidImg;
+    private TextView mRfidIdTv;
+    private TextView mRfidTypeTv;
     private NoScrollGridView mImgsGv;
     private CheckBox mNormalCb;
     private CheckBox mAbnormalCb;
@@ -89,7 +93,9 @@ public class ExecuteInspectActivity extends BaseActivity implements View.OnClick
     private void initView() {
         mTitlebarLayout = findViewById(R.id.execute_title_bar);
         mIdTv = findViewById(R.id.execute_id_tv);
-        mAddressTv = findViewById(R.id.execute_address_tv);
+        mRfidImg = findViewById(R.id.rfid_item_img_iv);
+        mRfidIdTv = findViewById(R.id.rfid_item_id_tv);
+        mRfidTypeTv = findViewById(R.id.rfid_item_type_tv);
         mImgsGv = findViewById(R.id.execute_imgs_gv);
         mNormalCb = findViewById(R.id.execute_result_normal_cb);
         mAbnormalCb = findViewById(R.id.execute_result_abnormal_cb);
@@ -117,6 +123,12 @@ public class ExecuteInspectActivity extends BaseActivity implements View.OnClick
         mTitlebarLayout.setOnLeftClickListener(this);
     }
 
+    private void initRfidView(RfidItem item) {
+        GlideUtil.loadImage(mRfidImg, item.img, null);
+        mRfidIdTv.setText("RFID 编号. " + item.no);
+        mRfidTypeTv.setText("设备类型：" + item.type);
+    }
+
     private CompoundButton.OnCheckedChangeListener mCheckedListener = new CompoundButton.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -142,8 +154,10 @@ public class ExecuteInspectActivity extends BaseActivity implements View.OnClick
         if(mDetail == null) {
             return;
         }
-        mIdTv.setText("巡检点" + mDetail.id);
-        mAddressTv.setText(mDetail.address);
+        mIdTv.setText("巡检点" + mDetail.name);
+        if(mDetail.rfidList != null && mDetail.rfidList.size() > 0) {
+            initRfidView(mDetail.rfidList.get(0));
+        }
 
         mImgList = new ArrayList<>();
         mImgAdapter = new ImageSelectAdapter(this, mImgList, true);
@@ -197,7 +211,11 @@ public class ExecuteInspectActivity extends BaseActivity implements View.OnClick
         new TaskDoneRequest(this, mDetail.id, fileIds, isNormal, abnormalType, abnormalResult, abnormalInfo, nickName).schedule(true, new RequestListener<Boolean>() {
             @Override
             public void onSuccess(Boolean result) {
-                ToastUtil.toastLongMessage("提交成功");
+//                ToastUtil.toastLongMessage("提交成功");
+                Intent i = new Intent(ExecuteInspectActivity.this, SuccessActivity.class);
+                i.putExtra("from", 1);
+                i.putExtra("success_tip", getString(R.string.inspect_success_tip, mRfidIdTv.getText().toString()));
+                startActivity(i);
                 finish();
             }
 
@@ -253,6 +271,10 @@ public class ExecuteInspectActivity extends BaseActivity implements View.OnClick
     }
 
     private void selectTypeDialog(final Context context) {
+        if(mTypeList == null || mTypeList.size() == 0) {
+            getErrorTypeData();
+            return;
+        }
         AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.InputDialogStyle);
         View layout = LayoutInflater.from(context).inflate(R.layout.dialog_select_abnormal_type, null);
         final AlertDialog dialog = builder.create();

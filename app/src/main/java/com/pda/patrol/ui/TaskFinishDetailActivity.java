@@ -8,23 +8,26 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 
 import com.pda.patrol.R;
-import com.pda.patrol.baseclass.component.BaseActivity;
 import com.pda.patrol.baseclass.component.ITitleBarLayout;
 import com.pda.patrol.baseclass.component.NoScrollGridView;
 import com.pda.patrol.baseclass.component.TitleBarLayout;
-import com.pda.patrol.entity.TaskInfo;
+import com.pda.patrol.entity.RfidItem;
 import com.pda.patrol.util.DateUtil;
+import com.pda.patrol.util.GlideUtil;
 
-public class TaskDetailActivity extends BaseActivity implements View.OnClickListener {
-    private static final String TAG = TaskDetailActivity.class.getSimpleName();
+import java.util.List;
+
+public class TaskFinishDetailActivity extends BaseTaskDetailActivity implements View.OnClickListener {
+    private static final String TAG = TaskFinishDetailActivity.class.getSimpleName();
 
     private TitleBarLayout mTitlebarLayout;
     private TextView mStateTv;
     private TextView mInspectTimeTv;
     private TextView mInspectNormalTv;
-    private ImageView mImgIv;
-    private TextView mIdTv;
-    private TextView mAddressTv;
+    private ImageView mRfidImgIv;
+    private TextView mRfidNoTv;
+    private TextView mRfidTypeTv;
+    private ImageView mMoreRfidIv;
     private TextView mImgCountTv;
     private NoScrollGridView mImgsGv;
     private TextView mCreatedTimeTv;
@@ -34,13 +37,11 @@ public class TaskDetailActivity extends BaseActivity implements View.OnClickList
     private TextView mInspectResultTv;
     private TextView mAbnormalTypeTv;
     private TextView mAbnormalInfoTv;
-    private TaskInfo mInfo;
-    private String mId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_task_detail);
+        setContentView(R.layout.activity_task_finish_detail);
 
         initView();
         configTitleBar();
@@ -52,9 +53,10 @@ public class TaskDetailActivity extends BaseActivity implements View.OnClickList
         mStateTv = findViewById(R.id.detail_task_state_tv);
         mInspectTimeTv = findViewById(R.id.detail_inspect_time_tv);
         mInspectNormalTv = findViewById(R.id.detail_inspect_normal_tv);
-        mImgIv = findViewById(R.id.detail_img_iv);
-        mIdTv = findViewById(R.id.detail_id_tv);
-        mAddressTv = findViewById(R.id.detail_address_tv);
+        mRfidImgIv = findViewById(R.id.detail_rfid_img_iv);
+        mRfidNoTv = findViewById(R.id.detail_rfid_no_tv);
+        mRfidTypeTv = findViewById(R.id.detail_rfid_type_tv);
+        mMoreRfidIv = findViewById(R.id.detail_rfid_more_iv);
         mImgCountTv = findViewById(R.id.detail_img_count_tv);
         mImgsGv = findViewById(R.id.detail_imgs_gv);
         mCreatedTimeTv = findViewById(R.id.detail_create_time_tv);
@@ -64,18 +66,18 @@ public class TaskDetailActivity extends BaseActivity implements View.OnClickList
         mInspectResultTv = findViewById(R.id.detail_inspect_result_tv);
         mAbnormalTypeTv = findViewById(R.id.detail_abnormal_type_tv);
         mAbnormalInfoTv = findViewById(R.id.detail_abnormal_info_tv);
+
+        mMoreRfidIv.setOnClickListener(this);
     }
 
     private void initData() {
-        mInfo = (TaskInfo) getIntent().getSerializableExtra("task_info");
         if(mInfo == null) {
             return;
         }
         mStateTv.setText("任务" + mInfo.taskStateName);
         mInspectNormalTv.setText(mInfo.isNormal == 1 ? "巡检正常" : "巡检异常");
         mInspectTimeTv.setText("巡检时间：" + DateUtil.convertTimeFormat(mInfo.dealTime, DateUtil.FORMAT_YYYYMMDDTHHMMSSTZD, DateUtil.FORMAT_YYYYMMDDHHMM));
-        mIdTv.setText("巡检点" + mInfo.inspectionId);
-        mAddressTv.setText("安装网点：" + mInfo.address);
+        initRfidView(mInfo.rfidList);
         if(mInfo.fileList != null && mInfo.fileList.size() > 0) {
             mImgCountTv.setText(getString(R.string.frid_count, mInfo.fileList.size()));
             mImgCountTv.setVisibility(View.VISIBLE);
@@ -106,6 +108,8 @@ public class TaskDetailActivity extends BaseActivity implements View.OnClickList
             mAbnormalTypeTv.setVisibility(View.VISIBLE);
             mAbnormalInfoTv.setVisibility(View.VISIBLE);
         }
+
+       getTaskListById();
     }
 
     private void configTitleBar() {
@@ -114,10 +118,27 @@ public class TaskDetailActivity extends BaseActivity implements View.OnClickList
         mTitlebarLayout.setOnLeftClickListener(this);
     }
 
+    private void initRfidView(List<RfidItem> list) {
+//        if(list == null || list.size() == 0) {
+//            return;
+//        }
+//        RfidItem item = list.get(0);
+//
+//        GlideUtil.loadImage(mRfidImgIv, item.img, null);
+//        mRfidNoTv.setText("RFID 编号. " + item.no);
+//        mRfidTypeTv.setText("设备类型：" + item.type);
+        GlideUtil.loadImageWithPlaceHolder(mRfidImgIv, mInfo.rfidUrl, R.drawable.ic_rfid_img1);
+        mRfidNoTv.setText("RFID 编号. " + mInfo.rfidNo);
+        mRfidTypeTv.setText("设备类型：" + mInfo.rfidTypeName);
+    }
+
     @Override
     public void onClick(View view) {
         if(view == mTitlebarLayout.getLeftGroup()) {
             finish();
+        } else if(view == mMoreRfidIv) {
+            selectFridDialog(this);
         }
     }
+
 }

@@ -39,6 +39,9 @@ public class TaskInfo implements Serializable {
     public String nickname;
     public List<String> fileList;
     public List<RfidItem> rfidList;
+    public String rfidNo;
+    public String rfidTypeName;
+    public String rfidUrl;
 
 
     public TaskInfo parse(JSONObject obj) throws JSONException {
@@ -60,6 +63,9 @@ public class TaskInfo implements Serializable {
         lng = obj.optDouble("lng");
         lat = obj.optDouble("lat");
         nickname = obj.optString("nickname");
+        rfidNo = obj.optString("rfidNo");
+        rfidTypeName = obj.optString("rfidTypeName");
+        rfidUrl = obj.optString("rfidUrl");
         fileList = new ArrayList();
         JSONArray fileArray = obj.optJSONArray("filesInfo");
         if(fileArray != null && fileArray.length() > 0) {
