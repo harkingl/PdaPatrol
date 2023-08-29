@@ -41,14 +41,14 @@ public class AddressDialogAdapter extends BaseListItemAdapter<AddressInfo> {
 //        GlideUtil.loadImage(holder.iv, item.img, null);
         holder.addressTv.setText(item.address);
         if(mSelectedItem != null && item == mSelectedItem) {
-            holder.cb.setSelected(true);
+            holder.cb.setImageResource(R.drawable.checkbox_select);
         } else {
-            holder.cb.setSelected(false);
+            holder.cb.setImageResource(R.drawable.checkbox_default);
         }
-        holder.cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        holder.cb.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(b) {
+            public void onClick(View view) {
+                if(mSelectedItem == null || mSelectedItem != item) {
                     mSelectedItem = item;
                     notifyDataSetChanged();
                 }
@@ -64,6 +64,6 @@ public class AddressDialogAdapter extends BaseListItemAdapter<AddressInfo> {
 
     class ViewHolder {
         public TextView addressTv;
-        public CheckBox cb;
+        public ImageView cb;
     }
 }

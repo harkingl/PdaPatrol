@@ -61,7 +61,7 @@ public class InstallInspectionRequest extends BaseRequest<String> {
     protected String result(JSONObject json) throws Exception {
         JSONObject data = json.optJSONObject("data");
         if(data != null) {
-            return data.optString("id");
+            return data.optString("name");
         }
         return "";
     }

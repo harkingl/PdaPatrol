@@ -18,12 +18,11 @@
         android:textSize="12sp"
         android:textStyle="bold"
         tools:text="闵行区-春申路-莲花南路交叉口"/>
-    <CheckBox
+    <ImageView
         android:id="@+id/dialog_item_cb"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_marginLeft="20dp"
-        android:button="@null"
-        android:background="@drawable/checkbox_selector"/>
+        android:src="@drawable/checkbox_default"/>
 
 </LinearLayout>
