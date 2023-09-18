@@ -31,3 +31,5 @@
 # 需要通过反射获取gifDecoder字段值，所以需要保持GifFrameLoader和GifState类不被混淆
 -keep class com.bumptech.glide.load.resource.gif.GifDrawable$GifState{*;}
 -keep class com.bumptech.glide.load.resource.gif.GifFrameLoader {*;}
+
+-keep class com.google.errorprone.annotations.Immutable

@@ -93,6 +93,11 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
         mList = new ArrayList<>();
         mAdapter = new TaskListAdapter(this, mList, 0);
         mTaskListView.setAdapter(mAdapter);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
 
         getTaskList();
         getHomeCount();

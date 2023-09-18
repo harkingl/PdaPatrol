@@ -115,6 +115,7 @@ public class TaskOverdueDetailActivity extends BaseTaskDetailActivity implements
     private void gotoInspectPage() {
         Intent i = new Intent(this, InspectScanActivity.class);
         i.putExtra("inspect_id", mInfo.inspectionId);
+        i.putExtra("task_id", mInfo.id);
         startActivity(i);
     }
 }

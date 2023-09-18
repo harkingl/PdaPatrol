@@ -48,6 +48,7 @@ public class InspectScanActivity extends BaseActivity implements View.OnClickLis
     private List<String> epcs;
     private String mId;
     private InspectionDetail mDetail;
+    private String mTaskId;
 
     private int mCount = DEFAULT_DOWN_COUNT;
     @Override
@@ -75,6 +76,7 @@ public class InspectScanActivity extends BaseActivity implements View.OnClickLis
 
     private void initData() {
         mId = getIntent().getStringExtra("inspect_id");
+        mTaskId = getIntent().getStringExtra("task_id");
 
         epcs = new ArrayList<>();
         mList = new ArrayList<>();
@@ -107,6 +109,8 @@ public class InspectScanActivity extends BaseActivity implements View.OnClickLis
             mList.addAll(detail.rfidList);
         }
         mDetail = detail;
+
+        getData("");
     }
 
     private void initRfidView(RfidItem item) {
@@ -119,13 +123,13 @@ public class InspectScanActivity extends BaseActivity implements View.OnClickLis
     @Override
     protected void onResume() {
         super.onResume();
-        open();
+//        open();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        close();
+//        close();
     }
 
     private void open() {
@@ -138,7 +142,7 @@ public class InspectScanActivity extends BaseActivity implements View.OnClickLis
 
     @Override
     protected void onDestroy() {
-        close();
+//        close();
         super.onDestroy();
     }
 
@@ -194,22 +198,22 @@ public class InspectScanActivity extends BaseActivity implements View.OnClickLis
     };
 
     private void getData(String epc) {
-        if(TextUtils.isEmpty(epc) || mList.size() == 0) {
-            return;
-        }
-        for(RfidItem item : mList) {
-            if(epc.equals(item.epc)) {
-                initRfidView(item);
-                mHandler.removeMessages(WHAT_REQUEST_DATA);
-                scanFinish();
-                mNextLayout.setVisibility(View.VISIBLE);
-                break;
-            }
-        }
-//        initRfidView(mList.get(0));
-//        mHandler.removeMessages(WHAT_REQUEST_DATA);
-//        scanFinish();
-//        mNextLayout.setVisibility(View.VISIBLE);
+//        if(TextUtils.isEmpty(epc) || mList.size() == 0) {
+//            return;
+//        }
+//        for(RfidItem item : mList) {
+//            if(epc.equals(item.epc)) {
+//                initRfidView(item);
+//                mHandler.removeMessages(WHAT_REQUEST_DATA);
+//                scanFinish();
+//                mNextLayout.setVisibility(View.VISIBLE);
+//                break;
+//            }
+//        }
+        initRfidView(mList.get(0));
+        mHandler.removeMessages(WHAT_REQUEST_DATA);
+        scanFinish();
+        mNextLayout.setVisibility(View.VISIBLE);
     }
 
     private void scanFinish() {
@@ -220,6 +224,7 @@ public class InspectScanActivity extends BaseActivity implements View.OnClickLis
     private void doNext() {
         Intent i = new Intent(this, ExecuteInspectActivity.class);
         i.putExtra("inspect_detail", mDetail);
+        i.putExtra("task_id", mTaskId);
         startActivity(i);
         finish();
     }

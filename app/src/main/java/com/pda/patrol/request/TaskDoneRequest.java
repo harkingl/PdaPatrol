@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import com.pda.patrol.server.okhttp.BaseRequest;
 import com.pda.patrol.server.util.UrlManager;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -42,8 +43,12 @@ public class TaskDoneRequest extends BaseRequest<Boolean> {
     protected String body()  throws JSONException {
         JSONObject obj = new JSONObject();
         obj.put("id", id);
-        if(fileIds != null) {
-            obj.put("fileIds", Arrays.toString(fileIds));
+        if(fileIds != null && fileIds.length > 0) {
+            JSONArray array = new JSONArray();
+            for(String file : fileIds) {
+                array.put(file);
+            }
+            obj.put("fileIds", array);
         }
         obj.put("isNormal", isNormal);
         if(!TextUtils.isEmpty(abnormalType)) {

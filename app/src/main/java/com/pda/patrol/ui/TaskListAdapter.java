@@ -77,7 +77,7 @@ public class TaskListAdapter extends BaseListItemAdapter<TaskInfo> {
             holder.inspectTv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    gotoInspectPage(item.inspectionId);
+                    gotoInspectPage(item.inspectionId, item.id);
                 }
             });
         } else {
@@ -87,9 +87,10 @@ public class TaskListAdapter extends BaseListItemAdapter<TaskInfo> {
         return convertView;
     }
 
-    private void gotoInspectPage(String id) {
+    private void gotoInspectPage(String id, String taskId) {
         Intent i = new Intent(context, InspectScanActivity.class);
         i.putExtra("inspect_id", id);
+        i.putExtra("task_id", taskId);
         context.startActivity(i);
     }
 

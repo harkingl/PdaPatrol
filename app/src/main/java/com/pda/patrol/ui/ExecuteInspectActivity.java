@@ -78,6 +78,7 @@ public class ExecuteInspectActivity extends BaseActivity implements View.OnClick
     private List<TypeInfo> mTypeList = new ArrayList<>();
     private TypeInfo mSelectType;
     private List<String> mFileIds = new ArrayList<>();
+    private String mTaskId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -151,6 +152,7 @@ public class ExecuteInspectActivity extends BaseActivity implements View.OnClick
 
     private void initData() {
         mDetail = (InspectionDetail) getIntent().getSerializableExtra("inspect_detail");
+        mTaskId = getIntent().getStringExtra("task_id");
         if(mDetail == null) {
             return;
         }
@@ -208,7 +210,7 @@ public class ExecuteInspectActivity extends BaseActivity implements View.OnClick
             mFileIds.toArray(fileIds);
         }
 
-        new TaskDoneRequest(this, mDetail.id, fileIds, isNormal, abnormalType, abnormalResult, abnormalInfo, nickName).schedule(true, new RequestListener<Boolean>() {
+        new TaskDoneRequest(this, mTaskId, fileIds, isNormal, abnormalType, abnormalResult, abnormalInfo, nickName).schedule(true, new RequestListener<Boolean>() {
             @Override
             public void onSuccess(Boolean result) {
 //                ToastUtil.toastLongMessage("提交成功");

@@ -36,7 +36,8 @@ public class InstallInspectionRequest extends BaseRequest<String> {
     @Override
     protected String body()  throws JSONException {
         JSONObject obj = new JSONObject();
-        obj.put("name", name);
+        // 巡检点名不需要传
+//        obj.put("name", name);
         obj.put("addressId", addressId);
         if(fileIds != null) {
             JSONArray fileIdArray = new JSONArray();

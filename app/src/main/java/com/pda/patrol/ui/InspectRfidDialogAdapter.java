@@ -56,7 +56,7 @@ public class InspectRfidDialogAdapter extends BaseListItemAdapter<TaskInfo> {
             holder.inspectTv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    gotoInspectPage(info.inspectionId);
+                    gotoInspectPage(info.inspectionId, info.id);
 //                        if(mDialog != null) {
 //                            mDialog.dismiss();
 //                        }
@@ -78,9 +78,10 @@ public class InspectRfidDialogAdapter extends BaseListItemAdapter<TaskInfo> {
         return convertView;
     }
 
-    private void gotoInspectPage(String id) {
+    private void gotoInspectPage(String id, String taskId) {
         Intent i = new Intent(context, InspectScanActivity.class);
         i.putExtra("inspect_id", id);
+        i.putExtra("task_id", taskId);
         context.startActivity(i);
     }
 
