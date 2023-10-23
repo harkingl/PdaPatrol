@@ -198,22 +198,22 @@ public class InspectScanActivity extends BaseActivity implements View.OnClickLis
     };
 
     private void getData(String epc) {
-//        if(TextUtils.isEmpty(epc) || mList.size() == 0) {
-//            return;
-//        }
-//        for(RfidItem item : mList) {
-//            if(epc.equals(item.epc)) {
-//                initRfidView(item);
-//                mHandler.removeMessages(WHAT_REQUEST_DATA);
-//                scanFinish();
-//                mNextLayout.setVisibility(View.VISIBLE);
-//                break;
-//            }
-//        }
-        initRfidView(mList.get(0));
-        mHandler.removeMessages(WHAT_REQUEST_DATA);
-        scanFinish();
-        mNextLayout.setVisibility(View.VISIBLE);
+        if(TextUtils.isEmpty(epc) || mList.size() == 0) {
+            return;
+        }
+        for(RfidItem item : mList) {
+            if(epc.equals(item.epc)) {
+                initRfidView(item);
+                mHandler.removeMessages(WHAT_REQUEST_DATA);
+                scanFinish();
+                mNextLayout.setVisibility(View.VISIBLE);
+                break;
+            }
+        }
+//        initRfidView(mList.get(0));
+//        mHandler.removeMessages(WHAT_REQUEST_DATA);
+//        scanFinish();
+//        mNextLayout.setVisibility(View.VISIBLE);
     }
 
     private void scanFinish() {

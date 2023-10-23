@@ -58,11 +58,11 @@ public class FindRfidActivity extends BaseActivity implements View.OnClickListen
         configTitleBar();
         initData();
 
-        Message msg = mHandler.obtainMessage(WHAT_REQUEST_DATA);
-        msg.obj = "E28011700000020E2511603A";
-        mHandler.sendMessageDelayed(msg, 2000);
-        mDataLayout.setVisibility(View.VISIBLE);
-        mEmptyLayout.setVisibility(View.GONE);
+//        Message msg = mHandler.obtainMessage(WHAT_REQUEST_DATA);
+//        msg.obj = "E28011700000020E2511603A";
+//        mHandler.sendMessageDelayed(msg, 2000);
+//        mDataLayout.setVisibility(View.VISIBLE);
+//        mEmptyLayout.setVisibility(View.GONE);
     }
 
     private void initView() {
