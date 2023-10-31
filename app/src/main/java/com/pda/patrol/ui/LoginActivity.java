@@ -1,7 +1,6 @@
 package com.pda.patrol.ui;
 
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
@@ -10,8 +9,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import androidx.annotation.NonNull;
 
 import com.pda.patrol.R;
 import com.pda.patrol.baseclass.component.BaseActivity;
@@ -60,19 +57,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         mPwdEt.setText("yytt2023");
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if(requestCode == 111) {
-            for(int result : grantResults) {
-                if(result != PackageManager.PERMISSION_GRANTED) {
-                    return;
-                }
-            }
-        }
-    }
-
     private void setEyeVisible() {
         if (mShowEye) {
             mPwdEt.setTransformationMethod(PasswordTransformationMethod.getInstance());
@@ -104,6 +88,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 ToastUtil.toastLongMessage("登录成功");
 
                 startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+//                startActivity(new Intent(LoginActivity.this, PatrolDetailActivity.class));
                 finish();
             }
 

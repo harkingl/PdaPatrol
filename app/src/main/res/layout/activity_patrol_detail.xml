@@ -107,6 +107,30 @@
                     android:horizontalSpacing="15dp"
                     android:verticalSpacing="15dp"/>
             </LinearLayout>
+            <LinearLayout
+                android:id="@+id/detail_search_device_ll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="13dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginHorizontal="20dp"
+                android:background="@drawable/border_blue_shape_8"
+                android:gravity="center"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_map_blue"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:includeFontPadding="false"
+                    android:layout_marginLeft="12dp"
+                    android:visibility="gone"
+                    android:textSize="16dp"
+                    android:textColor="@color/common_blue_color"
+                    android:text="查找设备"/>
+            </LinearLayout>
             <RelativeLayout
                 android:id="@+id/detail_task_ll"
                 android:layout_width="match_parent"

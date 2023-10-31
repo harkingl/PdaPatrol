@@ -14,6 +14,7 @@ public class RfidItem implements Serializable {
     public String epc;
     // 是否已扫描
     public boolean isScan;
+    public String blueToothMac;
 
     public RfidItem parse(JSONObject obj) {
         img = obj.optString("url");
@@ -21,6 +22,7 @@ public class RfidItem implements Serializable {
         no = obj.optString("no");
         type = obj.optString("typeName");
         epc = obj.optString("epc");
+        blueToothMac = obj.optString("blueToothMac");
 
         return this;
     }

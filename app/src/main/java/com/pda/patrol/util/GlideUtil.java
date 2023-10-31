@@ -101,4 +101,11 @@ public class GlideUtil {
                 .listener(listener)
                 .into(imageView);
     }
+
+    public static void loadGifImage(ImageView imageView, int resId) {
+        Glide.with(MainApplication.getInstance())
+                .asGif()
+                .load(resId)
+                .into(imageView);
+    }
 }

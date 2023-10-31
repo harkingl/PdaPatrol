@@ -2,6 +2,8 @@ pluginManagement {
     repositories {
         jcenter()
         // Add the Esri public Bintray Maven repository
+        //加入下面这句
+        maven{ url 'https://maven.aliyun.com/repository/public'}
         google()
         mavenCentral()
         gradlePluginPortal()
@@ -11,6 +13,8 @@ dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         jcenter()
+        //加入下面这句
+        maven{ url 'https://maven.aliyun.com/repository/public'}
         // Add the Esri public Bintray Maven repository
         google()
         mavenCentral()
@@ -19,3 +23,5 @@ dependencyResolutionManagement {
 rootProject.name = "PdaPatrol"
 include ':app'
 include ':ModuleAPI'
+include ':ble_rssi'
+project(':ble_rssi').projectDir = new File(rootProject.projectDir, './ble_rssi')
